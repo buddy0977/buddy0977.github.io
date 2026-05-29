@@ -1,0 +1,265 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0d0d0d;
+  color: #d4d4d4;
+  font-family: "Courier New", monospace;
+  padding: 40px 20px;
+  line-height: 1.6;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.4rem;
+  color: #888;
+  margin-bottom: 48px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: sans-serif;
+}
+
+.exp {
+  max-width: 860px;
+  margin: 0 auto 48px auto;
+  border: 1px solid #222;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.exp-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px 14px 20px;
+  padding-right: 120px;
+  background: #161616;
+  border-bottom: 1px solid #222;
+}
+
+.exp-num {
+  font-size: 0.7rem;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-family: sans-serif;
+  margin-bottom: 4px;
+}
+
+.exp-title {
+  font-size: 0.95rem;
+  color: #bbb;
+  font-family: sans-serif;
+  font-weight: 400;
+}
+
+/* Code block */
+.code-block {
+  position: relative;
+  background: #111;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  color: #888;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: sans-serif;
+  transition:
+    background 0.15s,
+    color 0.15s;
+  z-index: 1;
+}
+.copy-btn:hover {
+  background: #2a2a2a;
+  color: #ccc;
+}
+.copy-btn.copied {
+  color: #5a9e6f;
+  border-color: #5a9e6f;
+}
+
+.graph-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.graph-card {
+  flex: 1 1 240px;
+  min-width: 220px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.graph-title {
+  font-family: sans-serif;
+  font-size: 0.78rem;
+  color: #bbb;
+  margin-bottom: 10px;
+}
+
+.graph-diagram {
+  margin: 0;
+  white-space: normal;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #ddd;
+}
+
+.exp-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 24px;
+}
+
+.theory-text {
+  flex: 1 1 320px;
+  min-width: 280px;
+}
+
+.graph-block {
+  flex: 1 1 280px;
+  min-width: 260px;
+}
+
+pre {
+  padding: 20px;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  tab-size: 4;
+  white-space: pre;
+}
+
+/* Theory accordion */
+.theory-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: #131313;
+  border-top: 1px solid #1e1e1e;
+  cursor: pointer;
+  font-family: sans-serif;
+  font-size: 0.72rem;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  user-select: none;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.theory-toggle:hover {
+  background: #181818;
+  color: #888;
+}
+
+.theory-toggle .arrow {
+  font-size: 0.65rem;
+  transition: transform 0.25s;
+  display: inline-block;
+}
+.theory-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+
+.theory-body {
+  display: none;
+  padding: 16px 20px;
+  background: #0f0f0f;
+  border-top: 1px solid #1a1a1a;
+  font-family: sans-serif;
+  font-size: 0.85rem;
+  color: #888;
+  line-height: 1.8;
+}
+.theory-body.open {
+  display: block;
+}
+
+/* Theory-only block (exp 8,9,10) */
+.theory-only-wrap {
+  position: relative;
+}
+
+.theory-only-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: #131313;
+  cursor: pointer;
+  font-family: sans-serif;
+  font-size: 0.72rem;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  user-select: none;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.theory-only-toggle:hover {
+  background: #181818;
+  color: #888;
+}
+.theory-only-toggle .arrow {
+  font-size: 0.65rem;
+  transition: transform 0.25s;
+  display: inline-block;
+}
+.theory-only-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+
+.theory-only-body {
+  display: none;
+  padding: 16px 20px 20px 20px;
+  background: #0f0f0f;
+  font-family: sans-serif;
+  font-size: 0.85rem;
+  color: #888;
+  line-height: 1.8;
+}
+.theory-only-body.open {
+  display: block;
+}
+
+.theory-only-copy {
+  display: block;
+  margin-top: 14px;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  color: #888;
+  padding: 5px 14px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: sans-serif;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.theory-only-copy:hover {
+  background: #2a2a2a;
+  color: #ccc;
+}
+.theory-only-copy.copied {
+  color: #5a9e6f;
+  border-color: #5a9e6f;
+}
