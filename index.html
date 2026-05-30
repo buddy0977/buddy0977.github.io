@@ -519,6 +519,174 @@ TextViewer</pre
       </div>
     </div>
 
+    <!-- ───── EXP 11 ───── -->
+    <div class="exp">
+      <div class="exp-header">
+        <div class="exp-num">Experiment 11</div>
+        <div class="exp-title">Data Warehousing SQL & OLAP Operations</div>
+      </div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyBoth(this)">Copy</button>
+        <pre>
+exp 1:
+
+Queries: 
+1) CREATE TABLE TIME_DIM ( 
+DTime INT PRIMARY KEY, 
+Sales_Date DATE, 
+Month VARCHAR2(10), 
+Year INT 
+)
+INSERT INTO TIME_DIM VALUES (1, DATE '2024-01-10', 'January', 2024)
+INSERT INTO TIME_DIM VALUES (2, DATE '2024-02-15', 'February', 2024)
+INSERT INTO TIME_DIM VALUES (3, DATE '2024-03-20', 'March', 2024)
+INSERT INTO TIME_DIM VALUES (4, DATE '2024-04-25', 'April', 2024)
+2) CREATE TABLE BRANCH_DIM ( 
+Branch INT PRIMARY KEY, 
+Branch_Name VARCHAR(50), 
+Manager VARCHAR(50), 
+Branch_Type VARCHAR(30) 
+)
+INSERT INTO BRANCH_DIM VALUES (201, 'Mumbai Branch', 'Rajesh Sharma', 'Retail')
+INSERT INTO BRANCH_DIM VALUES (202, 'Pune Branch', 'Anita Desai', 'Retail')
+INSERT INTO BRANCH_DIM VALUES (203, 'Delhi Branch', 'Vikram Singh', 'Wholesale')
+INSERT INTO BRANCH_DIM VALUES (204, 'Bangalore Branch', 'Neha Rao', 'Retail')
+3) CREATE TABLE ITEM_DIM ( 
+DItem INT PRIMARY KEY, 
+Item_Name VARCHAR(50), 
+Brand VARCHAR(50), 
+Category VARCHAR(50) 
+)
+ 
+INSERT INTO ITEM_DIM VALUES (101, 'Laptop', 'Dell', 'Electronics')
+ 
+INSERT INTO ITEM_DIM VALUES (102, 'Smartphone', 'Samsung', 'Electronics')
+ 
+INSERT INTO ITEM_DIM VALUES (103, 'Television', 'Sony', 'Electronics')
+ 
+INSERT INTO ITEM_DIM VALUES (104, 'Printer', 'HP', 'Electronics')
+ 
+4) CREATE TABLE LOCATION_DIM ( 
+    DLocation INT PRIMARY KEY, 
+    City VARCHAR(50), 
+    State VARCHAR(50), 
+    Country VARCHAR(50) 
+)
+ 
+INSERT INTO LOCATION_DIM VALUES (301, 'Mumbai', 'Maharashtra', 'India')
+ 
+INSERT INTO LOCATION_DIM VALUES (302, 'Pune', 'Maharashtra', 'India')
+INSERT INTO LOCATION_DIM VALUES (303, 'Delhi', 'Delhi', 'India')
+INSERT INTO LOCATION_DIM VALUES (304, 'Bangalore', 'Karnataka', 'India')
+5) CREATE TABLE SALES_FACT ( 
+Sales INT PRIMARY KEY, 
+DTime INT, 
+DItem INT, 
+Branch INT, 
+DLocation INT, 
+Dollar_Sold DECIMAL(10,2), 
+Units_Sold INT, 
+FOREIGN KEY (DTime) REFERENCES TIME_DIM(DTime), 
+FOREIGN KEY (DItem) REFERENCES ITEM_DIM(DItem), 
+FOREIGN KEY (Branch) REFERENCES BRANCH_DIM(Branch), 
+FOREIGN KEY (DLocation) REFERENCES LOCATION_DIM(DLocation) 
+)
+INSERT INTO SALES_FACT VALUES (1001, 1, 101, 201, 301, 75000.00, 5)
+INSERT INTO SALES_FACT VALUES (1002, 2, 102, 202, 302, 50000.00, 8)
+INSERT INTO SALES_FACT VALUES (1003, 3, 103, 203, 303, 120000.00, 3)
+INSERT INTO SALES_FACT VALUES (1004, 4, 104, 204, 304, 30000.00, 6)
+Cross join 
+SELECT 
+t.DTime, 
+t.Sales_Date, 
+t.Month, 
+t.Year, 
+i.DItem, 
+i.Item_Name, 
+i.Brand, 
+i.Category, 
+b.Branch, 
+b.Branch_Name, 
+b.Manager, 
+b.Branch_Type, 
+l.DLocation, 
+l.City, 
+l.State, 
+l.Country 
+FROM TIME_DIM t 
+CROSS JOIN ITEM_DIM i 
+CROSS JOIN BRANCH_DIM b 
+CROSS JOIN LOCATION_DIM l;
+
+exp 2:
+
+1) Slice: 
+ 
+SELECT 
+    Year, 
+    SUM(Dollar_Sold) AS Total_Dollar_Sold, 
+    SUM(Units_Sold)  AS Total_Units_Sold 
+FROM SALES_FACT 
+NATURAL JOIN TIME_DIM 
+NATURAL JOIN ITEM_DIM 
+NATURAL JOIN LOCATION_DIM 
+WHERE Year = 2024 
+  AND Category = 'Electronics' 
+  AND Country = 'India' 
+GROUP BY Year; 
+ 
+ 
+2) Dice:  
+SELECT 
+    L.City, 
+    I.Category, 
+    B.Branch_Type, 
+SUM(S.Units_Sold)  AS Total_Units, 
+SUM(S.Dollar_Sold) AS Total_Sales 
+FROM SALES_FACT S 
+JOIN LOCATION_DIM L ON S.DLocation = L.DLocation 
+JOIN ITEM_DIM I     
+ON S.DItem     
+= I.DItem 
+JOIN BRANCH_DIM B   ON S.Branch    
+= B.Branch 
+WHERE 
+L.City = 'Mumbai' 
+AND I.Category = 'Electronics' 
+AND B.Branch_Type = 'Retail' 
+GROUP BY 
+L.City, 
+I.Category, 
+B.Branch_Type; 
+3) Roll up : 
+SELECT Year, 
+SUM(Dollar_Sold) AS Total_Sales, 
+SUM(Units_Sold) AS Total_Units 
+FROM SALES_FACT 
+NATURAL JOIN TIME_DIM 
+GROUP BY Year; 
+4)Drill down: 
+SELECT Year, 
+Month, 
+SUM(Dollar_Sold) AS Monthly_Sales 
+FROM SALES_FACT 
+NATURAL JOIN TIME_DIM 
+GROUP BY Year, Month 
+ORDER BY Year, Month;</pre
+        >
+      </div>
+      <div class="theory-toggle" onclick="toggleTheory(this)">
+        <span>Theory</span><span class="arrow">▼</span>
+      </div>
+      <div class="theory-body">
+        These SQL statements demonstrate creating a simple star schema (time,
+        branch, item, location dimensions and a sales fact table) and sample
+        OLAP-style queries: slice, dice, roll-up and drill-down. Use these as
+        classroom examples for practicing data warehouse design and querying
+        aggregated sales metrics.
+      </div>
+    </div>
+
     <script>
       /* Toggle theory accordion for exp 3–7 */
       function toggleTheory(toggle) {
