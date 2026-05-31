@@ -1,742 +1,364 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DWM Practicals</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <h1>DWM Practicals</h1>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Arduino Experiments</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <!-- ───── EXP 3 ───── -->
-    <div class="exp">
-      <div class="exp-header">
-        <div class="exp-num">Experiment 3</div>
-        <div class="exp-title">
-          Data Pre-processing using Python on given dataset
-        </div>
-      </div>
-      <div class="code-block">
-        <button class="copy-btn" onclick="copyBoth(this)">Copy</button>
-        <pre>
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import MinMaxScaler
+    body {
+      background: #0e0e0e;
+      color: #d4d4d4;
+      font-family: 'Courier New', monospace;
+      padding: 24px 16px;
+      min-height: 100vh;
+    }
 
-# Load Dataset
-data = pd.read_csv("student_practice_dataset.csv")
+    h1 {
+      text-align: center;
+      font-size: 1.4rem;
+      letter-spacing: 0.15em;
+      color: #7dd3fc;
+      margin-bottom: 32px;
+      text-transform: uppercase;
+    }
 
-# Display Original Dataset
-print("Original Dataset:\n")
-print(data)
+    .experiment {
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
 
-# Handling Missing Values
-data.fillna(data.mean(numeric_only=True), inplace=True)
+    .exp-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #1c1c1c;
+      border-bottom: 1px solid #2a2a2a;
+      gap: 12px;
+    }
 
-# Encoding Categorical Data
-le = LabelEncoder()
-for col in data.select_dtypes(include='object').columns:
-    data[col] = le.fit_transform(data[col])
+    .exp-title {
+      font-size: 0.78rem;
+      font-weight: bold;
+      letter-spacing: 0.1em;
+      color: #7dd3fc;
+      text-transform: uppercase;
+    }
 
-# Normalization
-scaler = MinMaxScaler()
-data[data.columns] = scaler.fit_transform(data[data.columns])
+    .exp-num {
+      color: #475569;
+      font-size: 0.72rem;
+      margin-right: 8px;
+    }
 
-# Display Processed Dataset
-print("\nPreprocessed Dataset:\n")
-print(data)</pre
-        >
-      </div>
-      <div class="theory-toggle" onclick="toggleTheory(this)">
-        <span>Theory</span><span class="arrow">▼</span>
-      </div>
-      <div class="theory-body">
-        Data pre-processing is an important step in the Knowledge Discovery in
-        Databases (KDD) process. Real-world data is often incomplete, noisy,
-        inconsistent, and contains missing values. The main purpose of
-        pre-processing is to improve the quality of data before applying data
-        mining algorithms. Data cleaning involves handling missing values,
-        removing noise, correcting inconsistencies, and detecting outliers. Data
-        integration combines data from multiple sources into a single dataset.
-        Data transformation converts data into a suitable format through
-        normalization, aggregation, and encoding techniques. Data reduction
-        reduces the volume of data while maintaining important information
-        through feature selection and dimensionality reduction. Data
-        discretization converts continuous values into intervals or categories.
-        Normalization techniques such as Min-Max and Z-score scaling help bring
-        attributes to a common range. Proper pre-processing improves the
-        efficiency and accuracy of classification, clustering, and association
-        rule mining algorithms. It also reduces computational complexity and
-        improves model performance. Therefore, data pre-processing is considered
-        the foundation of successful data mining.
-      </div>
-    </div>
+    .copy-btn {
+      background: #1e3a4a;
+      color: #7dd3fc;
+      border: 1px solid #2d5a7a;
+      border-radius: 5px;
+      padding: 5px 12px;
+      font-size: 0.72rem;
+      font-family: inherit;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
 
-    <!-- ───── EXP 4 ───── -->
-    <div class="exp">
-      <div class="exp-header">
-        <div class="exp-num">Experiment 4</div>
-        <div class="exp-title">
-          Implementation of Classification Algorithm (Decision Tree / Naive
-          Bayes) using Python
-        </div>
-      </div>
-      <div class="code-block">
-        <button class="copy-btn" onclick="copyBoth(this)">Copy</button>
-        <pre>
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score
+    .copy-btn:hover { background: #2d5a7a; color: #e0f2fe; }
+    .copy-btn.copied { background: #14532d; color: #86efac; border-color: #166534; }
 
-# Load Dataset
-data = pd.read_csv("student_practice_dataset.csv")
-print("Original Dataset:\n")
-print(data)
+    pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: #c9d1d9;
+      background: #161616;
+      white-space: pre;
+    }
 
-# Convert Text Data into Numbers
-le = LabelEncoder()
-for col in data.select_dtypes(include='object').columns:
-    data[col] = le.fit_transform(data[col])
+    @media (max-width: 480px) {
+      pre { font-size: 0.72rem; padding: 12px; }
+      .exp-title { font-size: 0.7rem; }
+    }
+  </style>
+</head>
+<body>
 
-# Input and Output
-X = data.drop('Result', axis=1)
-y = data['Result']
+<h1>Arduino Experiments</h1>
 
-# Split Dataset
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.3, random_state=1
-)
+<!-- EXP 1 -->
+<div class="experiment">
+  <div class="exp-header">
+    <div><span class="exp-num">EXP 1</span><span class="exp-title">Ultrasonic &amp; Buzzer</span></div>
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+  </div>
+  <pre>// Ultrasonic Sensor Pins
+const int trigPin = 9;
+const int echoPin = 10;
+// Buzzer Pin
+const int buzzer = 8;
+long duration;
+int distance;
 
-# Create Decision Tree Model
-model = DecisionTreeClassifier()
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzer, OUTPUT);
+  Serial.begin(9600);
+}
 
-# Train Model
-model.fit(X_train, y_train)
+void loop() {
+  // Clear trigger pin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Send ultrasonic pulse
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Read echo pulse
+  duration = pulseIn(echoPin, HIGH);
+  // Calculate distance
+  distance = duration * 0.034 / 2;
+  // Display distance
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  // Buzzer condition
+  if(distance &lt; 25) {
+    digitalWrite(buzzer, HIGH);
+  }
+  else {
+    digitalWrite(buzzer, LOW);
+  }
+  delay(200);
+}</pre>
+</div>
 
-# Prediction
-y_pred = model.predict(X_test)
+<!-- EXP 2 -->
+<div class="experiment">
+  <div class="exp-header">
+    <div><span class="exp-num">EXP 2</span><span class="exp-title">LCD Display</span></div>
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+  </div>
+  <pre>#include &lt;LiquidCrystal.h&gt;
 
-# Accuracy
-print("\nPredicted Output:")
-print(y_pred)
-print("\nAccuracy:")
-print(accuracy_score(y_test, y_pred))</pre
-        >
-      </div>
-      <div class="theory-toggle" onclick="toggleTheory(this)">
-        <span>Theory</span><span class="arrow">▼</span>
-      </div>
-      <div class="theory-body">
-        Classification is a supervised learning technique used to predict
-        categorical outcomes from labeled data. A Decision Tree is a
-        non-parametric supervised learning algorithm used for classification and
-        regression tasks. It consists of a root node, internal nodes, branches,
-        and leaf nodes arranged in a hierarchical structure. The tree is
-        constructed by recursively splitting the dataset based on attribute
-        values. This process is known as recursive partitioning. The objective
-        is to create homogeneous subsets that belong to the same class. Decision
-        trees are easy to understand, interpret, and visualize. They can handle
-        high-dimensional datasets and require little domain knowledge. Naive
-        Bayes is another classification algorithm based on Bayes' Theorem and
-        probability theory. It assumes that all attributes are independent of
-        each other. Prior probabilities and conditional probabilities are used
-        to determine the final class label. Classification algorithms are widely
-        used in medical diagnosis, spam filtering, fraud detection, and customer
-        behavior prediction. They provide accurate predictions and assist in
-        decision-making processes.
-      </div>
-    </div>
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
-    <!-- ───── EXP 5 ───── -->
-    <div class="exp">
-      <div class="exp-header">
-        <div class="exp-num">Experiment 5</div>
-        <div class="exp-title">
-          Implementation of Association Rule Mining Algorithm (Apriori) using
-          Python
-        </div>
-      </div>
-      <div class="code-block">
-        <button class="copy-btn" onclick="copyBoth(this)">Copy</button>
-        <pre>
-!pip install apyori
+void setup() {
+  // set up the LCD's number of columns and rows:
+  lcd.begin(16, 2);
+  // Print a message to the LCD.
+  lcd.setCursor(0, 0);
+  lcd.print("HI");
+  lcd.setCursor(0, 1);
+  lcd.print("hello, world!");
+}
 
-import pandas as pd
-from apyori import apriori
+void loop() {
+}</pre>
+</div>
 
-# Sample Transactions
-data = [
-    ['Milk', 'Bread'],
-    ['Bread', 'Butter'],
-    ['Milk', 'Bread', 'Butter'],
-    ['Bread'],
-    ['Milk', 'Butter']
-]
+<!-- EXP 3 -->
+<div class="experiment">
+  <div class="exp-header">
+    <div><span class="exp-num">EXP 3</span><span class="exp-title">DC Motor</span></div>
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+  </div>
+  <pre>// L298N Motor Driver Pins
+const int ENA = 9;
+const int IN1 = 8;
+const int IN2 = 7;
 
-# Apply Apriori
-rules = apriori(
-    data,
-    min_support=0.2,
-    min_confidence=0.5,
-    min_lift=1
-)
+void setup() {
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+}
 
-# Display Rules
-results = list(rules)
-for item in results:
-    print(item)</pre
-        >
-      </div>
-      <div class="theory-toggle" onclick="toggleTheory(this)">
-        <span>Theory</span><span class="arrow">▼</span>
-      </div>
-      <div class="theory-body">
-        Association Rule Mining is a data mining technique used to discover
-        interesting relationships among items in large datasets. It identifies
-        patterns showing how items are associated with one another in
-        transactions. The Apriori algorithm is one of the most popular
-        algorithms used for association rule mining. It is based on the Apriori
-        property, which states that every subset of a frequent itemset must also
-        be frequent. The algorithm works iteratively to generate frequent
-        itemsets and association rules. Market Basket Analysis is a common
-        application of Apriori where customer purchasing behavior is analyzed.
-        Important measures used in association rule mining are Support,
-        Confidence, Lift, and Conviction. Support measures how frequently an
-        itemset appears in the dataset. Confidence indicates the probability of
-        occurrence of one item when another item is present. Lift determines the
-        strength of the relationship between itemsets. Conviction measures the
-        dependency of one item on another. Association rule mining helps
-        businesses improve product placement, marketing strategies, and
-        recommendation systems. It is widely used in retail, healthcare, and web
-        usage mining.
-      </div>
-    </div>
+void loop() {
+  // Motor Forward Direction
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  // Speed Control using PWM
+  analogWrite(ENA, 200);
+  delay(3000);
+  // Stop Motor
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  delay(1000);
+  // Motor Reverse Direction
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  // Speed Control using PWM
+  analogWrite(ENA, 150);
+  delay(3000);
+  // Stop Motor
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  delay(1000);
+}</pre>
+</div>
 
-    <!-- ───── EXP 6 ───── -->
-    <div class="exp">
-      <div class="exp-header">
-        <div class="exp-num">Experiment 6</div>
-        <div class="exp-title">
-          Implementation of Clustering Algorithm (K-Means / Agglomerative) using
-          Python
-        </div>
-      </div>
-      <div class="code-block">
-        <button class="copy-btn" onclick="copyBoth(this)">Copy</button>
-        <pre>
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.cluster import KMeans
+<!-- EXP 4 -->
+<div class="experiment">
+  <div class="exp-header">
+    <div><span class="exp-num">EXP 4</span><span class="exp-title">Temp &amp; Buzzer</span></div>
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+  </div>
+  <pre>#include &lt;DHT11.h&gt;
 
-# Load Dataset
-data = pd.read_csv("student_practice_dataset.csv")
+DHT11 dht11(2);
+const int Buzzer = 8;
 
-# Convert Text Columns to Numbers
-le = LabelEncoder()
-for col in data.select_dtypes(include='object').columns:
-    data[col] = le.fit_transform(data[col])
+void setup() {
+  Serial.begin(9600);
+  pinMode(Buzzer, OUTPUT);
+}
 
-# K-Means Model
-kmeans = KMeans(n_clusters=2, random_state=0)
+void loop() {
+  int temperature = dht11.readTemperature();
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+  if(temperature &lt; 25) {
+    digitalWrite(Buzzer, HIGH);
+  }
+  else {
+    digitalWrite(Buzzer, LOW);
+  }
+}</pre>
+</div>
 
-# Create Clusters
-data['Cluster'] = kmeans.fit_predict(data)
+<!-- EXP 5 -->
+<div class="experiment">
+  <div class="exp-header">
+    <div><span class="exp-num">EXP 5</span><span class="exp-title">DHT11 &amp; Buzzer</span></div>
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+  </div>
+  <pre>#include &lt;DHT.h&gt;
 
-# Display Output
-print(data)</pre
-        >
-      </div>
-      <div class="theory-toggle" onclick="toggleTheory(this)">
-        <span>Theory</span><span class="arrow">▼</span>
-      </div>
-      <div class="theory-body">
-        Clustering is an unsupervised machine learning technique used to group
-        similar data objects into clusters. Objects within the same cluster are
-        more similar to each other than to objects in other clusters. K-Means is
-        one of the simplest and most widely used clustering algorithms. The
-        algorithm divides a dataset into K predefined clusters. It begins by
-        selecting K initial centroids randomly. Each data point is assigned to
-        the nearest centroid using a distance measure such as Euclidean
-        distance. After assignment, new centroids are calculated as the mean of
-        all points in each cluster. The assignment and centroid update steps are
-        repeated until convergence is achieved. The objective of K-Means is to
-        minimize the Sum of Squared Errors (SSE) within clusters. K-Means is
-        efficient, scalable, and suitable for large datasets. It is commonly
-        used in customer segmentation, image compression, pattern recognition,
-        and market analysis. However, it requires the number of clusters to be
-        specified beforehand and performs best on spherical clusters.
-      </div>
-    </div>
+// DHT11 setup
+#define DHTPIN 2
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+// Buzzer pin
+const int buzzer = 8;
+// Temperature threshold
+float threshold = 30.0;
 
-    <!-- ───── EXP 7 ───── -->
-    <div class="exp">
-      <div class="exp-header">
-        <div class="exp-num">Experiment 7</div>
-        <div class="exp-title">
-          Implementation of Prediction Algorithm (Linear Regression) using
-          Python
-        </div>
-      </div>
-      <div class="code-block">
-        <button class="copy-btn" onclick="copyBoth(this)">Copy</button>
-        <pre>
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, mean_absolute_error
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+  pinMode(buzzer, OUTPUT);
+}
 
-data = pd.read_csv("marks.csv")
+void loop() {
+  // Read temperature
+  float temperature = dht.readTemperature();
+  // Display temperature
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+  // Check threshold
+  if (temperature > threshold) {
+    digitalWrite(buzzer, HIGH);
+  }
+  else {
+    digitalWrite(buzzer, LOW);
+  }
+  delay(2000);
+}</pre>
+</div>
 
-X = data[['Hours']]
-y = data['Marks']
+<!-- EXP 7 -->
+<div class="experiment">
+  <div class="exp-header">
+    <div><span class="exp-num">EXP 7</span><span class="exp-title">RTOS</span></div>
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+  </div>
+  <pre>#include &lt;Arduino_FreeRTOS.h&gt;
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.25, random_state=1
-)
+// LED Pins
+const int redLED = 8;
+const int greenLED = 9;
+// Task Functions
+void RedLEDTask(void *pvParameters);
+void GreenLEDTask(void *pvParameters);
 
-model = LinearRegression()
-model.fit(X_train, y_train)
+void setup() {
+  pinMode(redLED, OUTPUT);
+  pinMode(greenLED, OUTPUT);
+  // Create Tasks
+  xTaskCreate(
+    RedLEDTask,
+    "Red LED Task",
+    128,
+    NULL,
+    1,
+    NULL
+  );
+  xTaskCreate(
+    GreenLEDTask,
+    "Green LED Task",
+    128,
+    NULL,
+    1,
+    NULL
+  );
+}
 
-y_pred = model.predict(X_test)
+void loop() {
+  // Empty because FreeRTOS scheduler handles tasks
+}
 
-print("Actual Values:")
-print(y_test.values)
-print("\nPredicted Values:")
-print(y_pred)
-print("\nMSE =", mean_squared_error(y_test, y_pred))
-print("MAE =", mean_absolute_error(y_test, y_pred))</pre
-        >
-      </div>
-      <div class="theory-toggle" onclick="toggleTheory(this)">
-        <span>Theory</span><span class="arrow">▼</span>
-      </div>
-      <div class="theory-body">
-        Linear Regression is a supervised learning algorithm used for predicting
-        continuous numerical values. It establishes a linear relationship
-        between a dependent variable and one or more independent variables. The
-        mathematical model of simple linear regression is represented as Y = mX
-        + c, where m is the slope and c is the intercept. The slope indicates
-        the rate of change in the dependent variable with respect to the
-        independent variable. Linear regression uses the Least Squares Method to
-        determine the best-fit line. This method minimizes the sum of squared
-        differences between actual and predicted values. The algorithm is easy
-        to implement and interpret. It is widely used in forecasting, trend
-        analysis, and predictive modeling. Model performance is evaluated using
-        error metrics such as Mean Absolute Error (MAE), Mean Squared Error
-        (MSE), and Root Mean Squared Error (RMSE). Linear regression helps
-        identify relationships among variables and supports informed
-        decision-making. Applications include sales forecasting, stock market
-        prediction, and economic analysis.
-      </div>
-    </div>
+// Task for Red LED
+void RedLEDTask(void *pvParameters) {
+  while (1) {
+    digitalWrite(redLED, HIGH);
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+    digitalWrite(redLED, LOW);
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+  }
+}
 
-    <!-- ───── EXP 8 ───── -->
-    <div class="exp">
-      <div class="exp-header">
-        <div>
-          <div class="exp-num">Experiment 8</div>
-          <div class="exp-title">
-            Data Pre-processing and Classification using WEKA
-          </div>
-        </div>
-        <button class="copy-btn" onclick="copyTheoryOnly(this)">Copy</button>
-      </div>
-      <div class="theory-only-wrap">
-        <div class="theory-only-toggle" onclick="toggleTheoryOnly(this)">
-          <span>Theory</span><span class="arrow">▼</span>
-        </div>
-        <div class="theory-only-body">
-          <div class="exp-grid">
-            <div class="theory-text">
-              WEKA is an open-source machine learning and data mining software
-              developed for data analysis and predictive modeling. It provides
-              tools for data preprocessing, classification, clustering,
-              association rule mining, and visualization. The software offers a
-              graphical user interface that makes machine learning accessible to
-              beginners. The Preprocess tab is used to load, clean, transform,
-              and prepare data for analysis. WEKA supports various file formats,
-              including ARFF and CSV. Classification algorithms such as J48
-              Decision Tree, Naive Bayes, Random Forest, and Support Vector
-              Machines are available in the Classify tab. The Cluster tab
-              contains clustering algorithms like SimpleKMeans and Hierarchical
-              Clustering. The Associate tab provides algorithms such as Apriori
-              and FP-Growth for association rule mining. Feature selection can
-              be performed using the Select Attributes tab. The Visualize tab
-              helps users understand patterns and relationships through graphs
-              and plots. WEKA enables rapid experimentation and evaluation of
-              machine learning models without extensive programming knowledge.
-            </div>
-            <div class="graph-block">
-              <div class="graph-title">Process Flow</div>
-              <pre class="graph-diagram">
-ARFFLoader
-    ↓
-ClassAssigner
-    ↓
-CrossValidationFoldMaker
-    ↓
-J48
-   ↙   ↘
-GraphViewer  ClassifierPerformanceEvaluator
-                     ↓
-                 TextViewer</pre
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+// Task for Green LED
+void GreenLEDTask(void *pvParameters) {
+  while (1) {
+    digitalWrite(greenLED, HIGH);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    digitalWrite(greenLED, LOW);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+  }
+}</pre>
+</div>
 
-    <!-- ───── EXP 9 ───── -->
-    <div class="exp">
-      <div class="exp-header">
-        <div>
-          <div class="exp-num">Experiment 9</div>
-          <div class="exp-title">
-            Association Rule Mining using WEKA (Apriori)
-          </div>
-        </div>
-        <button class="copy-btn" onclick="copyTheoryOnly(this)">Copy</button>
-      </div>
-      <div class="theory-only-wrap">
-        <div class="theory-only-toggle" onclick="toggleTheoryOnly(this)">
-          <span>Theory</span><span class="arrow">▼</span>
-        </div>
-        <div class="theory-only-body">
-          <div class="exp-grid">
-            <div class="theory-text">
-              Association rule learning is an unsupervised learning technique
-              used to discover relationships among variables in large datasets.
-              It identifies patterns indicating which items frequently occur
-              together in transactions. Market Basket Analysis is a common
-              application where retailers analyze customer purchasing behavior.
-              Apriori is a widely used algorithm for generating frequent
-              itemsets and association rules. The algorithm uses a level-wise
-              search strategy and the Apriori property to reduce the search
-              space. Important evaluation measures include Support, Confidence,
-              and Lift. Support measures how often an itemset appears in the
-              transaction database. Confidence measures the likelihood of an
-              item occurring given another item. Lift evaluates the strength of
-              an association by comparing observed occurrence with expected
-              occurrence. A lift value greater than one indicates a positive
-              relationship between items. Association rules help businesses
-              optimize store layouts, promotions, and recommendation systems.
-              WEKA provides an easy-to-use environment for generating and
-              evaluating association rules. This experiment demonstrates the
-              practical application of Apriori for extracting hidden patterns
-              from data.
-            </div>
-            <div class="graph-block">
-              <div class="graph-title">Process Flow</div>
-              <div class="graph-row">
-                <div class="graph-card">
-                  <div class="graph-title">(a)</div>
-                  <pre class="graph-diagram">
-ARFFLoader
-    ↓
-TrainingSetMaker
-    ↓
-Apriori
-    ↓
-TextViewer</pre
-                  >
-                </div>
-                <div class="graph-card">
-                  <div class="graph-title">(b)</div>
-                  <pre class="graph-diagram">
-ARFFLoader
-    ↓
-TrainingSetMaker
-    ↓
-FPGrowth
-    ↓
-TextViewer</pre
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.experiment').querySelector('pre');
+    // Decode HTML entities before copying
+    const txt = pre.innerHTML
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&');
+    navigator.clipboard.writeText(txt).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1800);
+    });
+  }
+</script>
 
-    <!-- ───── EXP 10 ───── -->
-    <div class="exp">
-      <div class="exp-header">
-        <div>
-          <div class="exp-num">Experiment 10</div>
-          <div class="exp-title">Clustering using WEKA</div>
-        </div>
-        <button class="copy-btn" onclick="copyTheoryOnly(this)">Copy</button>
-      </div>
-      <div class="theory-only-wrap">
-        <div class="theory-only-toggle" onclick="toggleTheoryOnly(this)">
-          <span>Theory</span><span class="arrow">▼</span>
-        </div>
-        <div class="theory-only-body">
-          <div class="exp-grid">
-            <div class="theory-text">
-              Clustering is a data mining technique used to organize data
-              objects into groups based on similarity. Before clustering, data
-              preprocessing is performed to improve data quality and
-              reliability. Missing values are handled using techniques such as
-              mean or mode replacement. Noisy and irrelevant data are removed
-              through filtering and attribute selection methods. Normalization
-              is applied to ensure that all attributes contribute equally during
-              distance calculations. WEKA provides clustering algorithms such as
-              SimpleKMeans and Hierarchical Clustering. K-Nearest Neighbor
-              concepts and distance-based grouping techniques are often used in
-              clustering-related analyses. The clustering process involves
-              calculating distances between data points and assigning them to
-              appropriate groups. Clusters help reveal hidden patterns and
-              structures within datasets. Clustering is widely used in customer
-              segmentation, document classification, image processing, and
-              biological data analysis. WEKA simplifies the clustering process
-              through an interactive graphical interface. The experiment
-              demonstrates how clustering algorithms can be applied effectively
-              after proper data preprocessing to obtain meaningful groups from
-              data.
-            </div>
-            <div class="graph-block">
-              <div class="graph-title">Process Flow</div>
-              <pre class="graph-diagram">
-ARFFLoader
-    ↓
-TrainingSetMaker
-    ↓
-SimpleKMeans
-    ↓
-ClustererPerformanceEvaluator
-    ↓
-TextViewer</pre
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ───── EXP 11 ───── -->
-    <div class="exp">
-      <div class="exp-header">
-        <div class="exp-num">Experiment 11</div>
-        <div class="exp-title">Data Warehousing SQL & OLAP Operations</div>
-      </div>
-      <div class="code-block">
-        <button class="copy-btn" onclick="copyBoth(this)">Copy</button>
-        <pre>
-exp 1:
-
-Queries: 
-1) CREATE TABLE TIME_DIM ( 
-DTime INT PRIMARY KEY, 
-Sales_Date DATE, 
-Month VARCHAR2(10), 
-Year INT 
-)
-INSERT INTO TIME_DIM VALUES (1, DATE '2024-01-10', 'January', 2024)
-INSERT INTO TIME_DIM VALUES (2, DATE '2024-02-15', 'February', 2024)
-INSERT INTO TIME_DIM VALUES (3, DATE '2024-03-20', 'March', 2024)
-INSERT INTO TIME_DIM VALUES (4, DATE '2024-04-25', 'April', 2024)
-2) CREATE TABLE BRANCH_DIM ( 
-Branch INT PRIMARY KEY, 
-Branch_Name VARCHAR(50), 
-Manager VARCHAR(50), 
-Branch_Type VARCHAR(30) 
-)
-INSERT INTO BRANCH_DIM VALUES (201, 'Mumbai Branch', 'Rajesh Sharma', 'Retail')
-INSERT INTO BRANCH_DIM VALUES (202, 'Pune Branch', 'Anita Desai', 'Retail')
-INSERT INTO BRANCH_DIM VALUES (203, 'Delhi Branch', 'Vikram Singh', 'Wholesale')
-INSERT INTO BRANCH_DIM VALUES (204, 'Bangalore Branch', 'Neha Rao', 'Retail')
-3) CREATE TABLE ITEM_DIM ( 
-DItem INT PRIMARY KEY, 
-Item_Name VARCHAR(50), 
-Brand VARCHAR(50), 
-Category VARCHAR(50) 
-)
- 
-INSERT INTO ITEM_DIM VALUES (101, 'Laptop', 'Dell', 'Electronics')
- 
-INSERT INTO ITEM_DIM VALUES (102, 'Smartphone', 'Samsung', 'Electronics')
- 
-INSERT INTO ITEM_DIM VALUES (103, 'Television', 'Sony', 'Electronics')
- 
-INSERT INTO ITEM_DIM VALUES (104, 'Printer', 'HP', 'Electronics')
- 
-4) CREATE TABLE LOCATION_DIM ( 
-    DLocation INT PRIMARY KEY, 
-    City VARCHAR(50), 
-    State VARCHAR(50), 
-    Country VARCHAR(50) 
-)
- 
-INSERT INTO LOCATION_DIM VALUES (301, 'Mumbai', 'Maharashtra', 'India')
- 
-INSERT INTO LOCATION_DIM VALUES (302, 'Pune', 'Maharashtra', 'India')
-INSERT INTO LOCATION_DIM VALUES (303, 'Delhi', 'Delhi', 'India')
-INSERT INTO LOCATION_DIM VALUES (304, 'Bangalore', 'Karnataka', 'India')
-5) CREATE TABLE SALES_FACT ( 
-Sales INT PRIMARY KEY, 
-DTime INT, 
-DItem INT, 
-Branch INT, 
-DLocation INT, 
-Dollar_Sold DECIMAL(10,2), 
-Units_Sold INT, 
-FOREIGN KEY (DTime) REFERENCES TIME_DIM(DTime), 
-FOREIGN KEY (DItem) REFERENCES ITEM_DIM(DItem), 
-FOREIGN KEY (Branch) REFERENCES BRANCH_DIM(Branch), 
-FOREIGN KEY (DLocation) REFERENCES LOCATION_DIM(DLocation) 
-)
-INSERT INTO SALES_FACT VALUES (1001, 1, 101, 201, 301, 75000.00, 5)
-INSERT INTO SALES_FACT VALUES (1002, 2, 102, 202, 302, 50000.00, 8)
-INSERT INTO SALES_FACT VALUES (1003, 3, 103, 203, 303, 120000.00, 3)
-INSERT INTO SALES_FACT VALUES (1004, 4, 104, 204, 304, 30000.00, 6)
-Cross join 
-SELECT 
-t.DTime, 
-t.Sales_Date, 
-t.Month, 
-t.Year, 
-i.DItem, 
-i.Item_Name, 
-i.Brand, 
-i.Category, 
-b.Branch, 
-b.Branch_Name, 
-b.Manager, 
-b.Branch_Type, 
-l.DLocation, 
-l.City, 
-l.State, 
-l.Country 
-FROM TIME_DIM t 
-CROSS JOIN ITEM_DIM i 
-CROSS JOIN BRANCH_DIM b 
-CROSS JOIN LOCATION_DIM l;
-
-exp 2:
-
-1) Slice: 
- 
-SELECT 
-    Year, 
-    SUM(Dollar_Sold) AS Total_Dollar_Sold, 
-    SUM(Units_Sold)  AS Total_Units_Sold 
-FROM SALES_FACT 
-NATURAL JOIN TIME_DIM 
-NATURAL JOIN ITEM_DIM 
-NATURAL JOIN LOCATION_DIM 
-WHERE Year = 2024 
-  AND Category = 'Electronics' 
-  AND Country = 'India' 
-GROUP BY Year; 
- 
- 
-2) Dice:  
-SELECT 
-    L.City, 
-    I.Category, 
-    B.Branch_Type, 
-SUM(S.Units_Sold)  AS Total_Units, 
-SUM(S.Dollar_Sold) AS Total_Sales 
-FROM SALES_FACT S 
-JOIN LOCATION_DIM L ON S.DLocation = L.DLocation 
-JOIN ITEM_DIM I     
-ON S.DItem     
-= I.DItem 
-JOIN BRANCH_DIM B   ON S.Branch    
-= B.Branch 
-WHERE 
-L.City = 'Mumbai' 
-AND I.Category = 'Electronics' 
-AND B.Branch_Type = 'Retail' 
-GROUP BY 
-L.City, 
-I.Category, 
-B.Branch_Type; 
-3) Roll up : 
-SELECT Year, 
-SUM(Dollar_Sold) AS Total_Sales, 
-SUM(Units_Sold) AS Total_Units 
-FROM SALES_FACT 
-NATURAL JOIN TIME_DIM 
-GROUP BY Year; 
-4)Drill down: 
-SELECT Year, 
-Month, 
-SUM(Dollar_Sold) AS Monthly_Sales 
-FROM SALES_FACT 
-NATURAL JOIN TIME_DIM 
-GROUP BY Year, Month 
-ORDER BY Year, Month;</pre
-        >
-      </div>
-      <div class="theory-toggle" onclick="toggleTheory(this)">
-        <span>Theory</span><span class="arrow">▼</span>
-      </div>
-      <div class="theory-body">
-        These SQL statements demonstrate creating a simple star schema (time,
-        branch, item, location dimensions and a sales fact table) and sample
-        OLAP-style queries: slice, dice, roll-up and drill-down. Use these as
-        classroom examples for practicing data warehouse design and querying
-        aggregated sales metrics.
-      </div>
-    </div>
-
-    <script>
-      /* Toggle theory accordion for exp 3–7 */
-      function toggleTheory(toggle) {
-        toggle.classList.toggle("open");
-        toggle.nextElementSibling.classList.toggle("open");
-      }
-
-      /* Toggle theory accordion for exp 8–10 */
-      function toggleTheoryOnly(toggle) {
-        toggle.classList.toggle("open");
-        toggle.nextElementSibling.classList.toggle("open");
-      }
-
-      /* Copy btn on code block — copies code + theory (if visible or not) */
-      function copyBoth(btn) {
-        const exp = btn.closest(".exp");
-        const pre = btn.closest(".code-block").querySelector("pre");
-        const theoryBody = exp.querySelector(".theory-body");
-
-        const codeText = pre.innerText.trim();
-        const theoryText = theoryBody ? theoryBody.innerText.trim() : "";
-
-        const combined =
-          "Code:\n" +
-          codeText +
-          (theoryText ? "\n\nTheory:\n" + theoryText : "");
-
-        navigator.clipboard.writeText(combined).then(() => ack(btn));
-      }
-
-      /* Copy btn inside theory-only body or header (exp 8–10) */
-      function copyTheoryOnly(btn) {
-        const exp = btn.closest(".exp");
-        const body = exp.querySelector(".theory-only-body");
-        if (!body) return;
-        const clone = body.cloneNode(true);
-        const innerButton = clone.querySelector("button");
-        if (innerButton) innerButton.remove();
-        const text = clone.innerText.trim();
-        navigator.clipboard.writeText("Theory:\n" + text).then(() => ack(btn));
-      }
-
-      function ack(btn) {
-        btn.textContent = "Copied!";
-        btn.classList.add("copied");
-        setTimeout(() => {
-          btn.textContent = "Copy";
-          btn.classList.remove("copied");
-        }, 1800);
-      }
-    </script>
-  </body>
+</body>
 </html>
