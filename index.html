@@ -84,6 +84,76 @@
       white-space: pre;
     }
 
+    .comment { color: #5a6472; }
+
+    .accordion { border-top: 1px solid #222; }
+
+    .accordion-toggle {
+      width: 100%;
+      background: #191919;
+      border: none;
+      color: #8899aa;
+      font-family: 'Courier New', monospace;
+      font-size: 0.73rem;
+      letter-spacing: 0.08em;
+      text-align: left;
+      padding: 10px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .accordion-toggle:hover { background: #1f1f1f; color: #aabbcc; }
+
+    .accordion-toggle .arrow {
+      display: inline-block;
+      transition: transform 0.25s;
+      font-size: 0.65rem;
+      color: #475569;
+    }
+
+    .accordion-toggle.open .arrow { transform: rotate(90deg); }
+
+    .accordion-body {
+      display: none;
+      padding: 14px 16px 16px;
+      background: #131313;
+      border-top: 1px solid #1e1e1e;
+      font-family: 'Courier New', monospace;
+      font-size: 0.76rem;
+      line-height: 1.7;
+      color: #8899aa;
+    }
+
+    .accordion-body.open { display: block; }
+    .accordion-body p { margin-bottom: 10px; }
+    .accordion-body p:last-child { margin-bottom: 0; }
+
+    .theory-label {
+      display: inline-block;
+      color: #4a7a8a;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .device-tag {
+      display: inline-block;
+      background: #1a2a30;
+      color: #5a9ab0;
+      border: 1px solid #2a3a44;
+      border-radius: 3px;
+      font-size: 0.66rem;
+      padding: 2px 7px;
+      margin: 2px 3px 2px 0;
+      letter-spacing: 0.06em;
+    }
+
+    .devices { margin-bottom: 10px; }
+
     @media (max-width: 480px) {
       pre { font-size: 0.72rem; padding: 12px; }
       .exp-title { font-size: 0.7rem; }
@@ -94,16 +164,16 @@
 
 <h1>Arduino Experiments</h1>
 
-<!-- EXP 1 -->
+<!-- ── EXP 1 ── -->
 <div class="experiment">
   <div class="exp-header">
     <div><span class="exp-num">EXP 1</span><span class="exp-title">Ultrasonic &amp; Buzzer</span></div>
     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
   </div>
-  <pre>// Ultrasonic Sensor Pins
+  <pre><span class="comment">// Ultrasonic Sensor Pins</span>
 const int trigPin = 9;
 const int echoPin = 10;
-// Buzzer Pin
+<span class="comment">// Buzzer Pin</span>
 const int buzzer = 8;
 long duration;
 int distance;
@@ -116,22 +186,24 @@ void setup() {
 }
 
 void loop() {
-  // Clear trigger pin
+  <span class="comment">// Clear trigger pin</span>
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
-  // Send ultrasonic pulse
+  <span class="comment">// Send ultrasonic pulse</span>
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
-  // Read echo pulse
+    
+  <span class="comment">// Read echo pulse</span>
   duration = pulseIn(echoPin, HIGH);
-  // Calculate distance
+  <span class="comment">// Calculate distance</span>
   distance = duration * 0.034 / 2;
-  // Display distance
+  <span class="comment">// Display distance</span>
   Serial.print("Distance: ");
   Serial.print(distance);
   Serial.println(" cm");
-  // Buzzer condition
+    
+  <span class="comment">// Buzzer condition</span>
   if(distance &lt; 25) {
     digitalWrite(buzzer, HIGH);
   }
@@ -140,9 +212,25 @@ void loop() {
   }
   delay(200);
 }</pre>
+  <div class="accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion(this)">
+      <span class="arrow">&#9658;</span> Theory &amp; Devices
+    </button>
+    <div class="accordion-body">
+      <div class="devices">
+        <span class="device-tag">HC-SR04</span>
+        <span class="device-tag">Passive Buzzer</span>
+        <span class="device-tag">Arduino Uno</span>
+      </div>
+      <span class="theory-label">Overview</span>
+      <p>The HC-SR04 ultrasonic sensor measures distance by emitting a 40 kHz sound pulse from its TRIG pin and timing how long the echo takes to return to the ECHO pin. Distance is calculated using the formula: distance = (duration × 0.034) / 2, where 0.034 cm/µs is the speed of sound and dividing by 2 accounts for the round trip.</p>
+      <p>The buzzer acts as an alert — when the measured distance falls below 25 cm, it activates to signal proximity. This is the fundamental principle behind parking sensors and obstacle-avoidance systems.</p>
+      <p>pulseIn() is a built-in Arduino function that measures the duration (in microseconds) of a HIGH pulse on a given pin. The TRIG pin must be pulsed HIGH for at least 10 µs to trigger a measurement cycle.</p>
+    </div>
+  </div>
 </div>
 
-<!-- EXP 2 -->
+<!-- ── EXP 2 ── -->
 <div class="experiment">
   <div class="exp-header">
     <div><span class="exp-num">EXP 2</span><span class="exp-title">LCD Display</span></div>
@@ -154,9 +242,9 @@ const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 void setup() {
-  // set up the LCD's number of columns and rows:
+  <span class="comment">// set up the LCD's number of columns and rows:</span>
   lcd.begin(16, 2);
-  // Print a message to the LCD.
+  <span class="comment">// Print a message to the LCD.</span>
   lcd.setCursor(0, 0);
   lcd.print("HI");
   lcd.setCursor(0, 1);
@@ -165,15 +253,31 @@ void setup() {
 
 void loop() {
 }</pre>
+  <div class="accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion(this)">
+      <span class="arrow">&#9658;</span> Theory &amp; Devices
+    </button>
+    <div class="accordion-body">
+      <div class="devices">
+        <span class="device-tag">16x2 LCD</span>
+        <span class="device-tag">LiquidCrystal Lib</span>
+        <span class="device-tag">Arduino Uno</span>
+      </div>
+      <span class="theory-label">Overview</span>
+      <p>The 16x2 LCD (Liquid Crystal Display) can show 16 characters across 2 rows. It is driven using the Hitachi HD44780 controller, which the LiquidCrystal library abstracts into simple function calls.</p>
+      <p>It is wired in 4-bit mode here — only D4–D7 data pins are used instead of all 8, which saves GPIO pins without sacrificing functionality. RS (Register Select) chooses between command and data mode, and EN (Enable) latches each instruction into the display.</p>
+      <p>lcd.begin(16, 2) initialises the display size. lcd.setCursor(col, row) positions the text cursor before printing. Row and column indices start at 0, so setCursor(0,1) moves to the beginning of the second line.</p>
+    </div>
+  </div>
 </div>
 
-<!-- EXP 3 -->
+<!-- ── EXP 3 ── -->
 <div class="experiment">
   <div class="exp-header">
     <div><span class="exp-num">EXP 3</span><span class="exp-title">DC Motor</span></div>
     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
   </div>
-  <pre>// L298N Motor Driver Pins
+  <pre><span class="comment">// L298N Motor Driver Pins</span>
 const int ENA = 9;
 const int IN1 = 8;
 const int IN2 = 7;
@@ -185,33 +289,50 @@ void setup() {
 }
 
 void loop() {
-  // Motor Forward Direction
+  <span class="comment">// Motor Forward Direction</span>
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
-  // Speed Control using PWM
+  <span class="comment">// Speed Control using PWM</span>
   analogWrite(ENA, 200);
   delay(3000);
-  // Stop Motor
+  <span class="comment">// Stop Motor</span>
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, LOW);
   delay(1000);
-  // Motor Reverse Direction
+    
+  <span class="comment">// Motor Reverse Direction</span>
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
-  // Speed Control using PWM
+  <span class="comment">// Speed Control using PWM</span>
   analogWrite(ENA, 150);
   delay(3000);
-  // Stop Motor
+  <span class="comment">// Stop Motor</span>
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, LOW);
   delay(1000);
 }</pre>
+  <div class="accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion(this)">
+      <span class="arrow">&#9658;</span> Theory &amp; Devices
+    </button>
+    <div class="accordion-body">
+      <div class="devices">
+        <span class="device-tag">L298N Driver</span>
+        <span class="device-tag">DC Motor</span>
+        <span class="device-tag">Arduino Uno</span>
+      </div>
+      <span class="theory-label">Overview</span>
+      <p>A DC motor cannot be driven directly from an Arduino GPIO pin — the pin can only supply ~40 mA, far less than what a motor needs. The L298N is an H-bridge motor driver IC that can supply up to 2 A per channel, powered by an external supply.</p>
+      <p>The H-bridge works by controlling two pairs of switches. Setting IN1=HIGH and IN2=LOW drives current in one direction (forward); reversing them (IN1=LOW, IN2=HIGH) reverses current flow, spinning the motor backward. Setting both LOW coasts or brakes the motor.</p>
+      <p>ENA (Enable A) controls speed via PWM (Pulse Width Modulation). analogWrite() outputs a 0–255 value representing 0–100% duty cycle. A value of 200 is ~78% speed, and 150 is ~59% speed, allowing smooth variable-speed control without wasting power as heat.</p>
+    </div>
+  </div>
 </div>
 
-<!-- EXP 4 -->
+<!-- ── EXP 4A ── -->
 <div class="experiment">
   <div class="exp-header">
-    <div><span class="exp-num">EXP 4</span><span class="exp-title">Temp &amp; Buzzer</span></div>
+    <div><span class="exp-num">EXP 4A</span><span class="exp-title">Temp &amp; Buzzer (DHT11.h)</span></div>
     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
   </div>
   <pre>#include &lt;DHT11.h&gt;
@@ -236,23 +357,40 @@ void loop() {
     digitalWrite(Buzzer, LOW);
   }
 }</pre>
+  <div class="accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion(this)">
+      <span class="arrow">&#9658;</span> Theory &amp; Devices
+    </button>
+    <div class="accordion-body">
+      <div class="devices">
+        <span class="device-tag">DHT11</span>
+        <span class="device-tag">DHT11.h Library</span>
+        <span class="device-tag">Passive Buzzer</span>
+        <span class="device-tag">Arduino Uno</span>
+      </div>
+      <span class="theory-label">Overview</span>
+      <p>The DHT11 is a low-cost digital temperature and humidity sensor. It uses a single-wire protocol to send calibrated data as a 40-bit serial stream. The DHT11.h library simplifies reading to a single call: readTemperature(), which returns an integer Celsius value.</p>
+      <p>The DHT11 measures temperatures from 0–50°C with ±2°C accuracy and humidity from 20–90% RH. It requires a pull-up resistor (typically 10 kΩ) on the data line, though many breakout modules include this on-board.</p>
+      <p>Here the buzzer activates when temperature drops below 25°C — an inverted threshold used as a cold-alert rather than an overheat alarm. This variant uses the simpler DHT11.h wrapper as compared to the full-featured DHT.h library used in Exp 4B.</p>
+    </div>
+  </div>
 </div>
 
-<!-- EXP 5 -->
+<!-- ── EXP 4B ── -->
 <div class="experiment">
   <div class="exp-header">
-    <div><span class="exp-num">EXP 5</span><span class="exp-title">DHT11 &amp; Buzzer</span></div>
+    <div><span class="exp-num">EXP 4B</span><span class="exp-title">DHT11 &amp; Buzzer (DHT.h)</span></div>
     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
   </div>
   <pre>#include &lt;DHT.h&gt;
 
-// DHT11 setup
+<span class="comment">// DHT11 setup</span>
 #define DHTPIN 2
 #define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
-// Buzzer pin
+<span class="comment">// Buzzer pin</span>
 const int buzzer = 8;
-// Temperature threshold
+<span class="comment">// Temperature threshold</span>
 float threshold = 30.0;
 
 void setup() {
@@ -262,13 +400,14 @@ void setup() {
 }
 
 void loop() {
-  // Read temperature
+  <span class="comment">// Read temperature</span>
   float temperature = dht.readTemperature();
-  // Display temperature
+  <span class="comment">// Display temperature</span>
   Serial.print("Temperature: ");
   Serial.print(temperature);
   Serial.println(" °C");
-  // Check threshold
+    
+  <span class="comment">// Check threshold</span>
   if (temperature > threshold) {
     digitalWrite(buzzer, HIGH);
   }
@@ -277,27 +416,173 @@ void loop() {
   }
   delay(2000);
 }</pre>
+  <div class="accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion(this)">
+      <span class="arrow">&#9658;</span> Theory &amp; Devices
+    </button>
+    <div class="accordion-body">
+      <div class="devices">
+        <span class="device-tag">DHT11</span>
+        <span class="device-tag">DHT.h Library</span>
+        <span class="device-tag">Passive Buzzer</span>
+        <span class="device-tag">Arduino Uno</span>
+      </div>
+      <span class="theory-label">Overview</span>
+      <p>This variant uses the Adafruit DHT unified library (DHT.h), which supports DHT11, DHT22, and DHT21 through a common interface selected via the DHTTYPE macro. It is more widely used and maintained than the simpler DHT11.h wrapper.</p>
+      <p>readTemperature() returns a float rather than an integer, giving finer decimal resolution. The threshold is set at 30.0°C — the buzzer fires when exceeded, making this a classic overheat alert applicable to server rooms, battery packs, or greenhouse monitoring.</p>
+      <p>A 2-second delay between readings is important: the DHT11 has a minimum sampling period of 1 second. Polling faster can return stale or incorrect values due to the sensor's internal capacitor charge cycle not completing in time.</p>
+    </div>
+  </div>
 </div>
 
-<!-- EXP 7 -->
+<!-- ── EXP 5 ── -->
 <div class="experiment">
   <div class="exp-header">
-    <div><span class="exp-num">EXP 7</span><span class="exp-title">RTOS</span></div>
+    <div><span class="exp-num">EXP 5</span><span class="exp-title">LPC2148 – Stepper Motor</span></div>
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+  </div>
+  <pre>#include &lt;lpc21XX.h&gt;
+
+void delay()
+{
+  int i,j;
+  for(i=0;i&lt;1000;i++)
+  {
+    for(j=0;j&lt;1000;j++);
+  }
+}
+
+void main(void)
+{
+  IODIR0 = 0X0000FFFF;
+  while(1)
+  {
+    IOSET0 = 0X00000914;
+    delay();
+    IOCLR0 = 0X0000FFFF;
+    IOSET0 = 0X00000A21;
+    delay();
+    IOCLR0 = 0X0000FFFF;
+    IOSET0 = 0X00001409;
+    delay();
+    IOCLR0 = 0X0000FFFF;
+    IOSET0 = 0X0000210A;
+    delay();
+    IOCLR0 = 0X0000FFFF;
+  }
+}</pre>
+  <div class="accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion(this)">
+      <span class="arrow">&#9658;</span> Theory &amp; Devices
+    </button>
+    <div class="accordion-body">
+      <div class="devices">
+        <span class="device-tag">LPC2148</span>
+        <span class="device-tag">Stepper Motor</span>
+        <span class="device-tag">ARM7TDMI-S</span>
+        <span class="device-tag">lpc21XX.h</span>
+      </div>
+      <span class="theory-label">Overview</span>
+      <p>The LPC2148 is a 32-bit ARM7TDMI-S based microcontroller by NXP. Unlike Arduino, it is programmed in bare-metal C using memory-mapped I/O registers. IODIR0 configures the direction of Port 0 pins — writing 0x0000FFFF sets the lower 16 pins as outputs.</p>
+      <p>IOSET0 and IOCLR0 are write-only registers that set or clear specific Port 0 pins without affecting others. Each hex value written to IOSET0 represents a specific bit pattern that energises a combination of stepper motor coils for one step in the sequence.</p>
+      <p>A stepper motor moves in discrete angular steps by energising coils in a defined sequence. The four hex values (0x0914, 0x0A21, 0x1409, 0x210A) represent a full-step drive pattern — each activating two coils at a time. Cycling through these four patterns in order rotates the motor continuously. The nested-loop software delay controls step speed without any hardware timer.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── EXP 6 ── -->
+<div class="experiment">
+  <div class="exp-header">
+    <div><span class="exp-num">EXP 6</span><span class="exp-title">Rate Monotonic Scheduling</span></div>
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+  </div>
+  <pre>#include &lt;iostream&gt;
+#include &lt;math.h&gt;
+using namespace std;
+
+int main() {
+  int a, temp, i, j;
+  float ut = 0;
+  float u[10], t[10], c[10], p[10];
+  cout &lt;&lt; "Enter the number of tasks: ";
+  cin &gt;&gt; a;
+    
+  for (i = 0; i &lt; a; i++) {
+    cout &lt;&lt; "Enter period of task " &lt;&lt; i + 1 &lt;&lt; ": ";
+    cin &gt;&gt; t[i];
+    p[i] = t[i];
+    cout &lt;&lt; "Enter CPU time of task " &lt;&lt; i + 1 &lt;&lt; ": ";
+    cin &gt;&gt; c[i];
+  }
+    
+  for (i = 0; i &lt; a - 1; i++) {
+    for (j = 0; j &lt; a - i - 1; j++) {
+      if (p[j] > p[j + 1]) {
+        temp = p[j];
+        p[j] = p[j + 1];
+        p[j + 1] = temp;
+      }
+    }
+  }
+    
+  cout &lt;&lt; "\nTask Priorities:\n";
+  for (i = 0; i &lt; a; i++) {
+    for (j = 0; j &lt; a; j++) {
+      if (t[i] == p[j]) {
+        cout &lt;&lt; "Priority of Task " &lt;&lt; i + 1 &lt;&lt; " is: " &lt;&lt; j + 1 &lt;&lt; endl;
+      }
+    }
+  }
+    
+  for (i = 0; i &lt; a; i++) {
+    u[i] = c[i] / t[i];
+    ut += u[i];
+  }
+  cout &lt;&lt; "\nTotal Utilization is: " &lt;&lt; ut &lt;&lt; endl;
+  if (ut &lt; 1) {
+    cout &lt;&lt; "Tasks are Schedulable" &lt;&lt; endl;
+  } else {
+    cout &lt;&lt; "Tasks are NOT Schedulable" &lt;&lt; endl;
+  }
+  return 0;
+}</pre>
+  <div class="accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion(this)">
+      <span class="arrow">&#9658;</span> Theory &amp; Devices
+    </button>
+    <div class="accordion-body">
+      <div class="devices">
+        <span class="device-tag">Rate Monotonic</span>
+        <span class="device-tag">RTOS Scheduling</span>
+        <span class="device-tag">C++ / Simulation</span>
+      </div>
+      <span class="theory-label">Overview</span>
+      <p>Rate Monotonic Scheduling (RMS) is a fixed-priority preemptive scheduling algorithm used in real-time systems. The core rule is simple: tasks with shorter periods are assigned higher priorities. This is optimal among all fixed-priority algorithms — if any fixed-priority assignment can meet all deadlines, RMS will too.</p>
+      <p>This program implements RMS analysis by taking each task's period (T) and CPU execution time (C), then computing CPU utilization as U = C/T per task. Total utilization is the sum of all individual utilizations. The schedulability condition checked here is U &lt; 1 (necessary condition). The tighter Liu &amp; Layland bound is U ≤ n(2^(1/n) − 1), which approaches ln(2) ≈ 69.3% as n grows.</p>
+      <p>Priority assignment is done by sorting periods in ascending order using bubble sort — the task with the smallest period gets priority rank 1 (highest). The program then maps each original task back to its sorted position to display its RMS priority. This simulation is useful for verifying task sets before deploying them on an embedded RTOS like FreeRTOS.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── EXP 7 ── -->
+<div class="experiment">
+  <div class="exp-header">
+    <div><span class="exp-num">EXP 7</span><span class="exp-title">RTOS – FreeRTOS LED Tasks</span></div>
     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
   </div>
   <pre>#include &lt;Arduino_FreeRTOS.h&gt;
 
-// LED Pins
+<span class="comment">// LED Pins</span>
 const int redLED = 8;
 const int greenLED = 9;
-// Task Functions
+<span class="comment">// Task Functions</span>
 void RedLEDTask(void *pvParameters);
 void GreenLEDTask(void *pvParameters);
 
 void setup() {
   pinMode(redLED, OUTPUT);
   pinMode(greenLED, OUTPUT);
-  // Create Tasks
+  <span class="comment">// Create Tasks</span>
   xTaskCreate(
     RedLEDTask,
     "Red LED Task",
@@ -317,10 +602,10 @@ void setup() {
 }
 
 void loop() {
-  // Empty because FreeRTOS scheduler handles tasks
+  <span class="comment">// Empty because FreeRTOS scheduler handles tasks</span>
 }
 
-// Task for Red LED
+<span class="comment">// Task for Red LED</span>
 void RedLEDTask(void *pvParameters) {
   while (1) {
     digitalWrite(redLED, HIGH);
@@ -330,7 +615,7 @@ void RedLEDTask(void *pvParameters) {
   }
 }
 
-// Task for Green LED
+<span class="comment">// Task for Green LED</span>
 void GreenLEDTask(void *pvParameters) {
   while (1) {
     digitalWrite(greenLED, HIGH);
@@ -339,17 +624,48 @@ void GreenLEDTask(void *pvParameters) {
     vTaskDelay(1000 / portTICK_PERIOD_MS);
   }
 }</pre>
+  <div class="accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion(this)">
+      <span class="arrow">&#9658;</span> Theory &amp; Devices
+    </button>
+    <div class="accordion-body">
+      <div class="devices">
+        <span class="device-tag">FreeRTOS</span>
+        <span class="device-tag">Red LED</span>
+        <span class="device-tag">Green LED</span>
+        <span class="device-tag">Arduino Uno</span>
+      </div>
+      <span class="theory-label">Overview</span>
+      <p>FreeRTOS (Free Real-Time Operating System) is a lightweight kernel that enables multitasking on microcontrollers. Unlike standard Arduino sketches where loop() executes sequentially, FreeRTOS allows multiple tasks to run concurrently by rapidly switching between them — a process called context switching.</p>
+      <p>xTaskCreate() registers a task with the scheduler. Parameters include the function pointer, a name string, stack size in words (128 here), optional parameters, priority level, and a handle. Both tasks have equal priority (1), so the scheduler round-robins between them using time slices.</p>
+      <p>vTaskDelay() is used instead of delay() — it yields CPU control back to the scheduler during the wait period, allowing other tasks to run. portTICK_PERIOD_MS converts milliseconds to RTOS ticks. The red LED blinks every 500 ms and the green every 1000 ms, both running independently without blocking each other.</p>
+    </div>
+  </div>
 </div>
 
 <script>
+  function toggleAccordion(btn) {
+    btn.classList.toggle('open');
+    btn.nextElementSibling.classList.toggle('open');
+  }
+
   function copyCode(btn) {
-    const pre = btn.closest('.experiment').querySelector('pre');
-    // Decode HTML entities before copying
-    const txt = pre.innerHTML
+    const exp = btn.closest('.experiment');
+    const pre = exp.querySelector('pre');
+    const theoryEl = exp.querySelector('.accordion-body');
+
+    const codeRaw = pre.innerHTML
+      .replace(/<span[^>]*>/g, '')
+      .replace(/<\/span>/g, '')
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .replace(/&amp;/g, '&');
-    navigator.clipboard.writeText(txt).then(() => {
+
+    const theoryText = theoryEl ? theoryEl.innerText.trim() : '';
+    const divider = '\u2500'.repeat(40);
+    const combined = codeRaw.trim() + '\n\n' + divider + '\nTHEORY\n' + divider + '\n' + theoryText;
+
+    navigator.clipboard.writeText(combined).then(() => {
       btn.textContent = 'Copied!';
       btn.classList.add('copied');
       setTimeout(() => {
