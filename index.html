@@ -14,7 +14,6 @@
     --accent: #00e5ff;
     --accent2: #7c4dff;
     --accent3: #00e676;
-    --accent4: #ff6d00;
     --text: #e2e8f0;
     --muted: #64748b;
     --code-bg: #0d1117;
@@ -29,8 +28,6 @@
     min-height: 100vh;
     line-height: 1.6;
   }
-
-  /* HEADER */
   header {
     padding: 48px 0 32px;
     text-align: center;
@@ -73,8 +70,6 @@
     margin-top: 10px;
     font-family: 'JetBrains Mono', monospace;
   }
-
-  /* NAV PILLS */
   nav {
     display: flex;
     flex-wrap: wrap;
@@ -95,20 +90,9 @@
     transition: all .2s;
   }
   nav a:hover { color: var(--accent); border-color: rgba(0,229,255,0.4); background: var(--tag-bg); }
-
-  /* MAIN */
   main { max-width: 960px; margin: 0 auto; padding: 0 20px 80px; }
-
-  /* SECTION */
-  .section {
-    margin-bottom: 64px;
-  }
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 28px;
-  }
+  .section { margin-bottom: 64px; }
+  .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
   .section-num {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -120,22 +104,13 @@
     letter-spacing: 2px;
     white-space: nowrap;
   }
-  .section-title {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-  .section-title span {
-    color: var(--accent);
-  }
-
-  /* CODE CARD */
+  .section-title { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+  .section-title span { color: var(--accent); }
   .code-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 6px;
     overflow: hidden;
-    position: relative;
   }
   .code-card-bar {
     display: flex;
@@ -146,9 +121,7 @@
     border-bottom: 1px solid var(--border);
   }
   .bar-dots { display: flex; gap: 6px; }
-  .bar-dots span {
-    width: 10px; height: 10px; border-radius: 50%;
-  }
+  .bar-dots span { width: 10px; height: 10px; border-radius: 50%; }
   .bar-dots .d1 { background: #ff5f57; }
   .bar-dots .d2 { background: #ffbd2e; }
   .bar-dots .d3 { background: #28ca41; }
@@ -178,7 +151,6 @@
   .copy-btn:hover { color: var(--accent); border-color: rgba(0,229,255,0.4); background: var(--tag-bg); }
   .copy-btn.copied { color: var(--accent3); border-color: rgba(0,230,118,0.4); background: rgba(0,230,118,0.06); }
   .copy-btn svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
   pre {
     padding: 22px 20px;
     overflow-x: auto;
@@ -188,26 +160,20 @@
     color: #abb2bf;
     background: var(--code-bg);
   }
-
-  /* Prolog syntax */
-  .kw { color: #c678dd; }
-  .pred { color: #61afef; }
-  .atom { color: #98c379; }
+  .kw  { color: #c678dd; }
+  .pred{ color: #61afef; }
+  .atom{ color: #98c379; }
   .var { color: #e06c75; }
   .com { color: #5c6370; font-style: italic; }
   .num { color: #d19a66; }
-  .op { color: #56b6c2; }
-  /* Python syntax */
+  .op  { color: #56b6c2; }
   .py-kw { color: #c678dd; }
   .py-fn { color: #61afef; }
-  .py-str { color: #98c379; }
-  .py-num { color: #d19a66; }
-  .py-com { color: #5c6370; font-style: italic; }
-  .py-var { color: #e5c07b; }
+  .py-str{ color: #98c379; }
+  .py-num{ color: #d19a66; }
+  .py-com{ color: #5c6370; font-style: italic; }
   .py-op { color: #56b6c2; }
   .py-bi { color: #e06c75; }
-
-  /* QUERIES */
   .queries-title {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -217,11 +183,7 @@
     margin: 20px 0 10px;
     padding-left: 4px;
   }
-  .query-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+  .query-list { display: flex; flex-direction: column; gap: 6px; }
   .query-item {
     display: flex;
     align-items: flex-start;
@@ -235,25 +197,10 @@
     font-size: 12.5px;
     color: #abb2bf;
   }
-  .query-item .q-num {
-    color: var(--accent2);
-    font-weight: 700;
-    min-width: 18px;
-  }
-  .query-item .q-ans {
-    display: block;
-    color: var(--muted);
-    font-size: 11px;
-    margin-top: 3px;
-  }
-
-  /* ACCORDION THEORY */
+  .query-item .q-num { color: var(--accent2); font-weight: 700; min-width: 18px; }
+  .query-item .q-ans { display: block; color: var(--muted); font-size: 11px; margin-top: 3px; }
   .theory-wrap { margin-top: 20px; }
-  .accordion {
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
+  .accordion { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
   .accordion-header {
     display: flex;
     align-items: center;
@@ -299,49 +246,33 @@
   .accordion-body {
     max-height: 0;
     overflow: hidden;
-    transition: max-height .35s ease;
+    transition: max-height .4s ease;
     background: var(--surface);
   }
-  .accordion-body.open { max-height: 600px; }
-  .theory-list {
-    list-style: none;
-    padding: 16px 20px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  .accordion-body.open { max-height: 800px; }
+  .theory-block {
+    padding: 22px 24px;
   }
-  .theory-list li {
-    display: flex;
-    gap: 12px;
-    font-size: 13.5px;
+  .theory-block p {
+    font-size: 14px;
     color: #c0c8d8;
-    line-height: 1.65;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
+    line-height: 1.85;
+    text-align: justify;
   }
-  .theory-list li:last-child { border-bottom: none; padding-bottom: 0; }
-  .t-num {
+  .theory-block p code {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 12px;
+    background: rgba(0,229,255,0.07);
+    border: 1px solid rgba(0,229,255,0.15);
+    padding: 1px 5px;
+    border-radius: 3px;
     color: var(--accent);
-    background: var(--tag-bg);
-    border: 1px solid rgba(0,229,255,0.2);
-    padding: 1px 7px;
-    border-radius: 2px;
-    height: fit-content;
-    margin-top: 3px;
-    white-space: nowrap;
-    flex-shrink: 0;
   }
-
-  /* Divider */
   .divider {
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--border), transparent);
     margin: 56px 0;
   }
-
-  /* Footer */
   footer {
     text-align: center;
     padding: 32px 20px;
@@ -350,8 +281,7 @@
     color: var(--muted);
     border-top: 1px solid var(--border);
   }
-
-  @media(max-width: 600px) {
+  @media(max-width:600px) {
     pre { font-size: 11.5px; }
     .section-title { font-size: 18px; }
   }
@@ -381,12 +311,11 @@
       <span class="section-num">01</span>
       <h2 class="section-title">Family Tree <span>— Prolog</span></h2>
     </div>
-
     <div class="code-card">
       <div class="code-card-bar">
         <div class="bar-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
         <span class="bar-lang">Prolog</span>
-        <button class="copy-btn" onclick="copyBlock('ft-block','ft-theory','this-btn',this)">
+        <button class="copy-btn" onclick="copyBlock('ft-block','ft-theory',this)">
           <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
           Copy All
         </button>
@@ -434,32 +363,22 @@
       <div class="query-list">
         <div class="query-item"><span class="q-num">Q1</span><div><code>?- parent_of(lily, harry).</code><span class="q-ans">→ true. (Lily is a parent of Harry)</span></div></div>
         <div class="query-item"><span class="q-num">Q2</span><div><code>?- grandfather_of(oliver, harry).</code><span class="q-ans">→ true. (Oliver → James → Harry)</span></div></div>
-        <div class="query-item"><span class="q-num">Q3</span><div><code>?- grandmother_of(X, harry).</code><span class="q-ans">→ X = helen ; X = sophie. (All grandmothers of Harry)</span></div></div>
-        <div class="query-item"><span class="q-num">Q4</span><div><code>?- ancestor_of(helen, harry).</code><span class="q-ans">→ true. (Helen is ancestor of Harry through Lily)</span></div></div>
-        <div class="query-item"><span class="q-num">Q5</span><div><code>?- uncle_of(X, harry).</code><span class="q-ans">→ X = simon. (James's brother Simon is uncle of Harry)</span></div></div>
+        <div class="query-item"><span class="q-num">Q3</span><div><code>?- grandmother_of(X, harry).</code><span class="q-ans">→ X = helen ; X = sophie.</span></div></div>
+        <div class="query-item"><span class="q-num">Q4</span><div><code>?- ancestor_of(helen, harry).</code><span class="q-ans">→ true. (Helen → Lily → Harry)</span></div></div>
+        <div class="query-item"><span class="q-num">Q5</span><div><code>?- uncle_of(X, harry).</code><span class="q-ans">→ X = simon.</span></div></div>
       </div>
     </div>
 
     <div class="theory-wrap">
       <div class="accordion">
         <div class="accordion-header" onclick="toggleAcc(this)">
-          <span class="acc-label">
-            <span class="acc-tag">Theory</span>
-            Family Tree — Key Concepts
-          </span>
+          <span class="acc-label"><span class="acc-tag">Theory</span> Family Tree — Key Concepts</span>
           <span class="acc-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
         </div>
         <div class="accordion-body" id="ft-theory">
-          <ul class="theory-list">
-            <li><span class="t-num">01</span>Prolog is a logic programming language based on formal logic. A program consists of facts (ground truths) and rules (logical implications) that are queried using a built-in inference engine via backward chaining.</li>
-            <li><span class="t-num">02</span>Facts like <code>parent_of(helen, lily)</code> assert unconditional truths. Rules use the <code>:-</code> operator (read as "if") to define relationships derived from other facts or rules.</li>
-            <li><span class="t-num">03</span>Variables in Prolog are uppercase (e.g., <code>X, Y, Z</code>) and are unified (bound) during resolution. Atoms are lowercase constants like <code>helen, lily</code>.</li>
-            <li><span class="t-num">04</span>Recursive rules such as <code>ancestor_of</code> use Prolog's built-in depth-first search to traverse chains of relationships. The base case terminates recursion when <code>parent_of(X,Y)</code> holds directly.</li>
-            <li><span class="t-num">05</span>The cut operator <code>!</code> in <code>aunt_of</code> prunes the search tree — once a valid aunt is found, Prolog stops exploring alternative solutions, preventing duplicate results.</li>
-            <li><span class="t-num">06</span>The <code>\=</code> constraint ensures inequality, preventing a person from being their own sibling (e.g., <code>X \= Y</code> in <code>sister_of</code>).</li>
-            <li><span class="t-num">07</span>Prolog uses backtracking to find all solutions. Querying <code>grandmother_of(X, harry)</code> causes Prolog to unify and explore all possible bindings of X that satisfy the rule.</li>
-            <li><span class="t-num">08</span>Multiple clauses for the same predicate (e.g., two clauses for <code>sister_of</code>) represent disjunction — a sister through either the father's or mother's side satisfies the predicate.</li>
-          </ul>
+          <div class="theory-block">
+            <p>Prolog is a logic programming language in which a program consists of facts and rules that together form a knowledge base, queried through a built-in inference engine using backward chaining. Facts such as <code>parent_of(helen, lily)</code> assert unconditional ground truths, while rules use the <code>:-</code> operator (read as "if") to derive new relationships from existing ones. Variables in Prolog are uppercase identifiers like <code>X</code> and <code>Y</code>, which get unified — bound to actual values — during resolution, whereas lowercase atoms like <code>helen</code> represent fixed constants. Derived predicates like <code>father_of</code> and <code>mother_of</code> combine the base <code>parent_of</code> fact with gender checks, building more specific relationships from simpler ones. The <code>ancestor_of</code> rule demonstrates recursion: its base case matches a direct parent, and its recursive case chains through intermediate nodes, allowing Prolog to traverse arbitrarily long ancestry paths automatically. Multiple clauses for the same predicate, as seen in <code>sister_of</code>, represent disjunction — a sibling relationship is satisfied through either a shared father or a shared mother, and Prolog tries each clause in order via backtracking. The inequality constraint <code>\=</code> prevents trivial self-matches, ensuring a person cannot be their own sibling. The cut operator <code>!</code> in <code>aunt_of</code> prunes the search tree after the first valid answer is found, preventing duplicate results in cases where only one solution is needed. When querying something like <code>grandmother_of(X, harry)</code>, Prolog uses backtracking to systematically find and return all possible bindings of <code>X</code>, making it naturally suited for querying relational family databases.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -473,34 +392,33 @@
       <span class="section-num">02</span>
       <h2 class="section-title">Breadth-First Search <span>— Prolog</span></h2>
     </div>
-
     <div class="code-card">
       <div class="code-card-bar">
         <div class="bar-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
         <span class="bar-lang">Prolog</span>
-        <button class="copy-btn" onclick="copyBlock('bfs-block','bfs-theory','this-btn',this)">
+        <button class="copy-btn" onclick="copyBlock('bfs-block','bfs-theory',this)">
           <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
           Copy All
         </button>
       </div>
-      <pre id="bfs-block"><span class="com">%connected(+Start, +Goal, -Weight)</span>
-<span class="pred">connected</span>(<span class="num">1</span>,<span class="num">7</span>,<span class="num">1</span>).   <span class="pred">connected</span>(<span class="num">1</span>,<span class="num">8</span>,<span class="num">1</span>).   <span class="pred">connected</span>(<span class="num">1</span>,<span class="num">3</span>,<span class="num">1</span>).
-<span class="pred">connected</span>(<span class="num">7</span>,<span class="num">4</span>,<span class="num">1</span>).   <span class="pred">connected</span>(<span class="num">7</span>,<span class="num">20</span>,<span class="num">1</span>).  <span class="pred">connected</span>(<span class="num">7</span>,<span class="num">17</span>,<span class="num">1</span>).
-<span class="pred">connected</span>(<span class="num">8</span>,<span class="num">6</span>,<span class="num">1</span>).   <span class="pred">connected</span>(<span class="num">3</span>,<span class="num">9</span>,<span class="num">1</span>).   <span class="pred">connected</span>(<span class="num">3</span>,<span class="num">12</span>,<span class="num">1</span>).
-<span class="pred">connected</span>(<span class="num">9</span>,<span class="num">19</span>,<span class="num">1</span>).  <span class="pred">connected</span>(<span class="num">4</span>,<span class="num">42</span>,<span class="num">1</span>).  <span class="pred">connected</span>(<span class="num">20</span>,<span class="num">28</span>,<span class="num">1</span>).
-<span class="pred">connected</span>(<span class="num">17</span>,<span class="num">10</span>,<span class="num">1</span>).
+      <pre id="bfs-block"><span class="com">%connected(+Start, +Goal)</span>
+<span class="pred">connected</span>(<span class="num">1</span>,<span class="num">7</span>).   <span class="pred">connected</span>(<span class="num">1</span>,<span class="num">8</span>).   <span class="pred">connected</span>(<span class="num">1</span>,<span class="num">3</span>).
+<span class="pred">connected</span>(<span class="num">7</span>,<span class="num">4</span>).   <span class="pred">connected</span>(<span class="num">7</span>,<span class="num">20</span>).  <span class="pred">connected</span>(<span class="num">7</span>,<span class="num">17</span>).
+<span class="pred">connected</span>(<span class="num">8</span>,<span class="num">6</span>).   <span class="pred">connected</span>(<span class="num">3</span>,<span class="num">9</span>).   <span class="pred">connected</span>(<span class="num">3</span>,<span class="num">12</span>).
+<span class="pred">connected</span>(<span class="num">9</span>,<span class="num">19</span>).  <span class="pred">connected</span>(<span class="num">4</span>,<span class="num">42</span>).  <span class="pred">connected</span>(<span class="num">20</span>,<span class="num">28</span>).
+<span class="pred">connected</span>(<span class="num">17</span>,<span class="num">10</span>).
 
-<span class="pred">connected2</span>(<span class="var">X</span>,<span class="var">Y</span>,<span class="var">D</span>) <span class="op">:-</span> <span class="pred">connected</span>(<span class="var">X</span>,<span class="var">Y</span>,<span class="var">D</span>).
-<span class="pred">connected2</span>(<span class="var">X</span>,<span class="var">Y</span>,<span class="var">D</span>) <span class="op">:-</span> <span class="pred">connected</span>(<span class="var">Y</span>,<span class="var">X</span>,<span class="var">D</span>).
+<span class="pred">connected2</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span> <span class="pred">connected</span>(<span class="var">X</span>,<span class="var">Y</span>).
+<span class="pred">connected2</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span> <span class="pred">connected</span>(<span class="var">Y</span>,<span class="var">X</span>).
 
 <span class="pred">next_node</span>(<span class="var">Current</span>, <span class="var">Next</span>, <span class="var">Path</span>) <span class="op">:-</span>
-    <span class="pred">connected2</span>(<span class="var">Current</span>, <span class="var">Next</span>, <span class="var">_</span>),
+    <span class="pred">connected2</span>(<span class="var">Current</span>, <span class="var">Next</span>),
     <span class="kw">not</span>(<span class="pred">member</span>(<span class="var">Next</span>, <span class="var">Path</span>)).
 
 <span class="pred">breadth_first</span>(<span class="var">Goal</span>, <span class="var">Goal</span>, <span class="var">_</span>, [<span class="var">Goal</span>]).
 <span class="pred">breadth_first</span>(<span class="var">Start</span>, <span class="var">Goal</span>, <span class="var">Visited</span>, <span class="var">Path</span>) <span class="op">:-</span>
     <span class="pred">findall</span>(<span class="var">X</span>,
-        (<span class="pred">connected2</span>(<span class="var">X</span>,<span class="var">Start</span>,<span class="var">_</span>), <span class="kw">not</span>(<span class="pred">member</span>(<span class="var">X</span>,<span class="var">Visited</span>))),
+        (<span class="pred">connected2</span>(<span class="var">X</span>,<span class="var">Start</span>), <span class="kw">not</span>(<span class="pred">member</span>(<span class="var">X</span>,<span class="var">Visited</span>))),
         [<span class="var">T</span>|<span class="var">Extend</span>]),
     <span class="pred">write</span>(<span class="var">Visited</span>), <span class="pred">nl</span>,
     <span class="pred">append</span>(<span class="var">Visited</span>, [<span class="var">T</span>|<span class="var">Extend</span>], <span class="var">Visited2</span>),
@@ -511,10 +429,10 @@
     <div style="margin-top:18px;">
       <div class="queries-title">// Sample Queries</div>
       <div class="query-list">
-        <div class="query-item"><span class="q-num">Q1</span><div><code>?- breadth_first(1, 28, [1], Path).</code><span class="q-ans">→ Finds path from node 1 to node 28 via BFS</span></div></div>
-        <div class="query-item"><span class="q-num">Q2</span><div><code>?- connected2(7, X, _).</code><span class="q-ans">→ X = 1 ; X = 4 ; X = 20 ; X = 17. (All neighbours of 7)</span></div></div>
+        <div class="query-item"><span class="q-num">Q1</span><div><code>?- breadth_first(1, 28, [1], Path).</code><span class="q-ans">→ Finds shortest path from node 1 to node 28</span></div></div>
+        <div class="query-item"><span class="q-num">Q2</span><div><code>?- connected2(7, X).</code><span class="q-ans">→ X = 1 ; X = 4 ; X = 20 ; X = 17.</span></div></div>
         <div class="query-item"><span class="q-num">Q3</span><div><code>?- breadth_first(1, 42, [1], Path).</code><span class="q-ans">→ Path goes 1 → 7 → 4 → 42</span></div></div>
-        <div class="query-item"><span class="q-num">Q4</span><div><code>?- next_node(3, X, [1,3]).</code><span class="q-ans">→ X = 9 ; X = 12. (Unvisited neighbours of 3)</span></div></div>
+        <div class="query-item"><span class="q-num">Q4</span><div><code>?- next_node(3, X, [1,3]).</code><span class="q-ans">→ X = 9 ; X = 12.</span></div></div>
         <div class="query-item"><span class="q-num">Q5</span><div><code>?- breadth_first(1, 19, [1], Path).</code><span class="q-ans">→ Path: 1 → 3 → 9 → 19</span></div></div>
       </div>
     </div>
@@ -526,15 +444,9 @@
           <span class="acc-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
         </div>
         <div class="accordion-body" id="bfs-theory">
-          <ul class="theory-list">
-            <li><span class="t-num">01</span>Breadth-First Search (BFS) explores a graph level by level — all nodes at depth 1 are visited before any node at depth 2. This guarantees finding the shortest path in an unweighted graph.</li>
-            <li><span class="t-num">02</span><code>connected2</code> makes the graph bidirectional by allowing traversal in both directions, even though the original <code>connected</code> facts are one-directional.</li>
-            <li><span class="t-num">03</span><code>findall/3</code> collects all unvisited neighbours of the current node into a list, simulating the BFS queue expansion step.</li>
-            <li><span class="t-num">04</span>The <code>Visited</code> list prevents revisiting already-explored nodes, avoiding infinite loops in cyclic graphs and ensuring each node is processed at most once.</li>
-            <li><span class="t-num">05</span>The base case <code>breadth_first(Goal, Goal, _, [Goal])</code> terminates recursion when the current frontier node matches the goal, returning it as a single-element path.</li>
-            <li><span class="t-num">06</span>BFS uses more memory than DFS (O(b^d) space where b=branching factor, d=depth) because it maintains the entire frontier queue, but guarantees optimality for uniform-cost edges.</li>
-            <li><span class="t-num">07</span><code>append/3</code> is used to manage both the visited list and the path — merging the current visited set with new neighbours and updating the traversal queue simultaneously.</li>
-          </ul>
+          <div class="theory-block">
+            <p>Breadth-First Search (BFS) is a graph traversal algorithm that explores nodes level by level, visiting all nodes at depth 1 before any node at depth 2, ensuring the shortest path is found in an unweighted graph. In this Prolog implementation, the graph is defined using <code>connected</code> facts that represent one-directional edges, and the <code>connected2</code> predicate makes the graph bidirectional by providing two clauses — one matching the original direction and one reversing the arguments. The core of the BFS expansion step is <code>findall/3</code>, which collects all unvisited neighbours of the current node into a single list in one call, effectively simulating the queue-filling operation performed at each level. The <code>Visited</code> list acts as the explored set, and the <code>not(member(X, Visited))</code> check ensures no node is processed more than once, preventing infinite loops in cyclic graphs. The base case <code>breadth_first(Goal, Goal, _, [Goal])</code> terminates the recursion cleanly when the current node matches the goal, at which point the path list is returned and the recursion unwinds. The <code>next_node</code> predicate provides a helper for checking valid unvisited transitions from any given node, useful for testing graph connectivity independently. The <code>append/3</code> predicate serves a dual role: it merges the current visited set with newly discovered neighbours to form <code>Visited2</code>, and simultaneously manages the traversal queue by appending new nodes to the path. BFS requires O(b<sup>d</sup>) space where b is the branching factor and d is the solution depth, making it more memory-intensive than DFS, but this cost guarantees optimality. The <code>write(Visited)</code> call at each recursive step prints the visited list at each expansion stage, making the level-by-level progress of the algorithm visible during execution.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -548,12 +460,11 @@
       <span class="section-num">03</span>
       <h2 class="section-title">Depth-First Search <span>— Prolog</span></h2>
     </div>
-
     <div class="code-card">
       <div class="code-card-bar">
         <div class="bar-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
         <span class="bar-lang">Prolog</span>
-        <button class="copy-btn" onclick="copyBlock('dfs-block','dfs-theory','this-btn',this)">
+        <button class="copy-btn" onclick="copyBlock('dfs-block','dfs-theory',this)">
           <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
           Copy All
         </button>
@@ -587,11 +498,11 @@
     <div style="margin-top:18px;">
       <div class="queries-title">// Sample Queries</div>
       <div class="query-list">
-        <div class="query-item"><span class="q-num">Q1</span><div><code>?- solve(a, Solution).</code><span class="q-ans">→ Solution = [f, c, a] (first path DFS finds to a goal)</span></div></div>
-        <div class="query-item"><span class="q-num">Q2</span><div><code>?- depthfirst2(a, Path, 3).</code><span class="q-ans">→ Path = [a, b, d, h] or [a, c, f] (depth-limited)</span></div></div>
-        <div class="query-item"><span class="q-num">Q3</span><div><code>?- goal(X).</code><span class="q-ans">→ X = f ; X = j. (All goal states)</span></div></div>
-        <div class="query-item"><span class="q-num">Q4</span><div><code>?- depthfirst([], a, Sol).</code><span class="q-ans">→ Sol = [f, c, a] (same as solve/2)</span></div></div>
-        <div class="query-item"><span class="q-num">Q5</span><div><code>?- depthfirst2(a, Path, 4).</code><span class="q-ans">→ Path = [a, b, e, j] (finds second goal j within depth 4)</span></div></div>
+        <div class="query-item"><span class="q-num">Q1</span><div><code>?- solve(a, Solution).</code><span class="q-ans">→ Solution = [f, c, a]</span></div></div>
+        <div class="query-item"><span class="q-num">Q2</span><div><code>?- depthfirst2(a, Path, 3).</code><span class="q-ans">→ Path = [a, b, d, h] or [a, c, f]</span></div></div>
+        <div class="query-item"><span class="q-num">Q3</span><div><code>?- goal(X).</code><span class="q-ans">→ X = f ; X = j.</span></div></div>
+        <div class="query-item"><span class="q-num">Q4</span><div><code>?- depthfirst([], a, Sol).</code><span class="q-ans">→ Sol = [f, c, a]</span></div></div>
+        <div class="query-item"><span class="q-num">Q5</span><div><code>?- depthfirst2(a, Path, 4).</code><span class="q-ans">→ Path = [a, b, e, j]</span></div></div>
       </div>
     </div>
 
@@ -602,15 +513,9 @@
           <span class="acc-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
         </div>
         <div class="accordion-body" id="dfs-theory">
-          <ul class="theory-list">
-            <li><span class="t-num">01</span>Depth-First Search (DFS) explores as deep as possible along each branch before backtracking. In Prolog, this maps naturally to the language's own recursive + backtracking execution model.</li>
-            <li><span class="t-num">02</span>The <code>Path</code> accumulator carries visited nodes to prevent cycles. The check <code>\+ member(Node1, Path)</code> ensures we never re-enter a previously explored state.</li>
-            <li><span class="t-num">03</span>The <code>solve/2</code> wrapper initialises the visited path as empty (<code>[]</code>) and delegates to <code>depthfirst/3</code>, separating interface from implementation.</li>
-            <li><span class="t-num">04</span>DFS has O(b·m) space complexity (b = branching factor, m = max depth) — far more memory-efficient than BFS for deep trees, though it may not find the shortest path.</li>
-            <li><span class="t-num">05</span>Depth-Limited DFS (<code>depthfirst2</code>) adds a <code>Maxdepth</code> parameter that decrements with each recursive call, stopping exploration once the limit is reached — useful for iterative deepening.</li>
-            <li><span class="t-num">06</span>The state-space graph is defined by <code>s/2</code> (successor relation), making the search algorithm cleanly independent of the problem — different problems only require different <code>s/2</code> and <code>goal/1</code> definitions.</li>
-            <li><span class="t-num">07</span>DFS can get trapped exploring infinite paths in graphs without a depth limit or visited-node check. Both protective mechanisms are demonstrated here — cyclic check in <code>depthfirst</code> and depth cap in <code>depthfirst2</code>.</li>
-          </ul>
+          <div class="theory-block">
+            <p>Depth-First Search (DFS) is a graph traversal strategy that explores as deep as possible along each branch before backtracking to try alternative paths, and in Prolog it maps directly onto the language's own recursive and backtracking execution model. The state-space is defined purely through the <code>s/2</code> successor relation and the <code>goal/1</code> predicate, making the search algorithm completely problem-independent — only these two predicates need to change for a different problem. The <code>solve/2</code> predicate acts as a clean public interface, initialising the visited path as an empty list and delegating all work to <code>depthfirst/3</code>, which carries the accumulator. The <code>Path</code> accumulator records all nodes on the current active branch, and the check <code>\+ member(Node1, Path)</code> ensures the algorithm never re-enters a node already on the path, preventing infinite loops in cyclic graphs. DFS has O(b·m) space complexity, where b is the branching factor and m is the maximum depth, making it far more memory-efficient than BFS since only the nodes on the current path are held in memory at any time. The depth-limited variant <code>depthfirst2</code> adds a <code>Maxdepth</code> counter that decrements with each recursive call; when it reaches zero the branch is abandoned, preventing the algorithm from descending into arbitrarily deep or infinite paths. This depth-limited DFS is the building block of Iterative Deepening DFS (IDDFS), which repeatedly runs depth-limited searches with increasing limits to achieve BFS-level completeness with DFS-level memory usage. In this program two goal states <code>f</code> and <code>j</code> are defined, so the same search infrastructure can find either goal depending on which is encountered first in the tree traversal. Without both the visited-node check and an optional depth cap, DFS would be incomplete and potentially non-terminating on graphs with cycles or infinite branches.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -624,12 +529,11 @@
       <span class="section-num">04</span>
       <h2 class="section-title">Hill Climbing <span>— Python</span></h2>
     </div>
-
     <div class="code-card">
       <div class="code-card-bar">
         <div class="bar-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
         <span class="bar-lang">Python</span>
-        <button class="copy-btn" onclick="copyBlock('hc-block','hc-theory','this-btn',this)">
+        <button class="copy-btn" onclick="copyBlock('hc-block','hc-theory',this)">
           <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
           Copy All
         </button>
@@ -668,16 +572,9 @@ iterations = <span class="py-num">0</span>
           <span class="acc-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
         </div>
         <div class="accordion-body" id="hc-theory">
-          <ul class="theory-list">
-            <li><span class="t-num">01</span>Hill Climbing is a local search algorithm that continuously moves to the neighbouring state with the highest value (greedy best neighbour). It is an iterative improvement technique with no memory of previously visited states.</li>
-            <li><span class="t-num">02</span>The objective function here is <code>f(x) = -x² + 5</code>, a downward parabola with a global maximum at x = 0 where f(0) = 5. The negative quadratic ensures a single peak — an ideal test case.</li>
-            <li><span class="t-num">03</span>At each iteration, two neighbours are evaluated: <code>x - step</code> (left) and <code>x + step</code> (right). The algorithm moves to whichever neighbour improves the objective; if neither does, it terminates.</li>
-            <li><span class="t-num">04</span>The step size (0.1) controls the resolution of the search. Larger steps speed up convergence but may skip over the exact peak; smaller steps are more precise but slower.</li>
-            <li><span class="t-num">05</span>Hill Climbing can get stuck at local maxima, plateaus, or ridges — points where no immediate neighbour improves the objective but the global optimum hasn't been reached. This is its primary limitation.</li>
-            <li><span class="t-num">06</span>Convergence is detected when neither left nor right neighbour yields improvement, meaning the algorithm has reached a local (and in this case, global) optimum. The loop then breaks early.</li>
-            <li><span class="t-num">07</span>The near-zero check (<code>abs(x) < 1e-10</code>) handles floating-point precision — since the true optimum is x = 0, values extremely close to zero are snapped to exactly 0.0 for clean output.</li>
-            <li><span class="t-num">08</span>Variants like Stochastic Hill Climbing, Random Restarts, and Simulated Annealing address the local-maxima problem by introducing randomness or occasional downhill moves to escape suboptimal regions.</li>
-          </ul>
+          <div class="theory-block">
+            <p>Hill Climbing is a local search optimisation algorithm that starts from an initial solution and iteratively moves to the neighbouring state with the highest objective value, continuing until no neighbour offers improvement. It belongs to the family of greedy algorithms because it always commits to the best immediate move without any lookahead or memory of previously visited states. The objective function in this program is <code>f(x) = -x² + 5</code>, a downward-opening parabola with a single global maximum at x = 0 where f(0) = 5, making it an ideal and easily verifiable test case. At each iteration, two candidate neighbours are evaluated — <code>x - step</code> (left) and <code>x + step</code> (right) — and the algorithm moves to whichever improves the function value; if neither does, it concludes that a local optimum has been reached and terminates early via <code>break</code>. The step size of 0.1 controls the balance between precision and speed: a larger step covers the search space faster but may overshoot the exact peak, while a smaller step gives finer resolution at the cost of more iterations. A key limitation of Hill Climbing is that it can permanently get stuck at local maxima, plateaus, or ridges in more complex multi-modal functions, since it has no mechanism to escape once no immediate improvement is visible. In this specific case the function has only one peak so the algorithm always converges to the global optimum, but this would not be guaranteed on a function with multiple local maxima. The near-zero floating-point check <code>abs(x) &lt; 1e-10</code> handles the fact that repeated floating-point arithmetic may leave x as a very small non-zero number rather than exactly 0.0, snapping it to the true optimum for clean output. Variants such as Stochastic Hill Climbing, Random-Restart Hill Climbing, and Simulated Annealing were developed to overcome the local-maxima problem by introducing randomness, multiple starting points, or occasional downhill moves respectively.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -691,12 +588,11 @@ iterations = <span class="py-num">0</span>
       <span class="section-num">05</span>
       <h2 class="section-title">Genetic Algorithm <span>— Python</span></h2>
     </div>
-
     <div class="code-card">
       <div class="code-card-bar">
         <div class="bar-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
         <span class="bar-lang">Python</span>
-        <button class="copy-btn" onclick="copyBlock('ga-block','ga-theory','this-btn',this)">
+        <button class="copy-btn" onclick="copyBlock('ga-block','ga-theory',this)">
           <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
           Copy All
         </button>
@@ -739,16 +635,9 @@ population = [random.<span class="py-fn">randint</span>(<span class="py-num">0</
           <span class="acc-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
         </div>
         <div class="accordion-body" id="ga-theory">
-          <ul class="theory-list">
-            <li><span class="t-num">01</span>Genetic Algorithms (GAs) are population-based metaheuristic optimisation algorithms inspired by Darwinian evolution — survival of the fittest, crossover, and mutation drive the population toward better solutions over generations.</li>
-            <li><span class="t-num">02</span>The fitness function <code>-abs(TARGET - x)</code> assigns higher fitness to individuals closer to the target value (20). A fitness of 0 means a perfect solution; increasingly negative values indicate increasing distance from the target.</li>
-            <li><span class="t-num">03</span>Selection identifies the two fittest individuals (parents) from the current population by sorting using the fitness key. This is a simple truncation selection strategy — only the top 2 reproduce.</li>
-            <li><span class="t-num">04</span>Crossover (recombination) creates a child by averaging the two parent values: <code>(parent1 + parent2) // 2</code>. This mimics biological crossover where offspring inherit traits from both parents.</li>
-            <li><span class="t-num">05</span>Mutation introduces randomness by randomly adding or subtracting 1 from the child with 30% probability. This prevents the population from converging prematurely and maintains genetic diversity.</li>
-            <li><span class="t-num">06</span>Elitism is implicit — the worst individual is replaced by the new child while the best individuals are preserved across generations, ensuring the population quality never decreases.</li>
-            <li><span class="t-num">07</span>GAs are particularly powerful for large, complex search spaces where gradient information is unavailable. Unlike hill climbing, they maintain a diverse population, reducing the risk of getting trapped at local optima.</li>
-            <li><span class="t-num">08</span>The key parameters — population size (6), mutation rate (0.3), and number of generations (10) — control the exploration-exploitation trade-off. Larger populations and more generations improve solution quality at the cost of computation time.</li>
-          </ul>
+          <div class="theory-block">
+            <p>A Genetic Algorithm (GA) is a population-based metaheuristic optimisation technique inspired by Darwinian natural selection, where a population of candidate solutions evolves over successive generations through selection, crossover, and mutation until an optimal or near-optimal solution is found. The algorithm begins by generating an initial population of six random integers in the range 0–30, each representing a candidate solution to the problem of reaching the target value of 20. The fitness function <code>-abs(TARGET - x)</code> scores each individual based on its distance from the target, returning 0 for a perfect match and increasingly negative values for individuals that are further away, giving the selection process a clear directional signal. In each generation, the population is sorted by fitness in descending order and the top two individuals are selected as parents — a strategy known as truncation selection, directly embodying the survival-of-the-fittest principle. Crossover (recombination) then creates a new child by computing the integer average of the two parents: <code>(parent1 + parent2) // 2</code>, which mimics biological gene mixing and tends to produce offspring that inherit the better traits of both parents. Mutation is applied with a 30% probability by randomly nudging the child by ±1; without this step the population would rapidly converge to a narrow region of the search space and lose the diversity needed to explore other areas. Elitism is implicitly enforced by always replacing the lowest-ranked individual with the new child, ensuring the best solutions already found are never discarded and the population quality is monotonically non-decreasing. Unlike Hill Climbing, which operates on a single candidate solution and is prone to getting stuck at local optima, GAs maintain a diverse population throughout, significantly reducing the risk of premature convergence. The three key parameters — population size, mutation rate, and number of generations — control the exploration-exploitation trade-off: larger values improve solution quality at the cost of additional computation time.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -770,26 +659,20 @@ population = [random.<span class="py-fn">randint</span>(<span class="py-num">0</
 
   function getPlainText(id) {
     const el = document.getElementById(id);
-    return el ? el.innerText || el.textContent : '';
+    return el ? (el.innerText || el.textContent) : '';
   }
 
   function getTheoryText(theoryId) {
     const el = document.getElementById(theoryId);
     if (!el) return '';
-    const items = el.querySelectorAll('.theory-list li');
-    let out = '\n\n--- THEORY ---\n';
-    items.forEach((li, i) => {
-      const text = li.innerText || li.textContent;
-      out += `\n${i + 1}. ${text.replace(/^\d+\s*/, '').trim()}`;
-    });
-    return out;
+    const p = el.querySelector('.theory-block p');
+    return p ? '\n\n--- THEORY ---\n\n' + (p.innerText || p.textContent).trim() : '';
   }
 
-  function copyBlock(codeId, theoryId, _, btn) {
+  function copyBlock(codeId, theoryId, btn) {
     const code = getPlainText(codeId);
     const theory = getTheoryText(theoryId);
-    const full = code + theory;
-    navigator.clipboard.writeText(full).then(() => {
+    navigator.clipboard.writeText(code + theory).then(() => {
       btn.classList.add('copied');
       btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
       setTimeout(() => {
