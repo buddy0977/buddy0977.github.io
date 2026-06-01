@@ -1,680 +1,803 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Arduino Experiments</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Experiment 2 — AI Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: #1e2330;
+    --accent: #00e5ff;
+    --accent2: #7c4dff;
+    --accent3: #00e676;
+    --accent4: #ff6d00;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --code-bg: #0d1117;
+    --tag-bg: rgba(0,229,255,0.08);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
 
-    body {
-      background: #0e0e0e;
-      color: #d4d4d4;
-      font-family: 'Courier New', monospace;
-      padding: 24px 16px;
-      min-height: 100vh;
-    }
+  /* HEADER */
+  header {
+    padding: 48px 0 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 300px;
+    background: radial-gradient(ellipse, rgba(0,229,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .exp-label {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(0,229,255,0.3);
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    background: var(--tag-bg);
+  }
+  h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #e2e8f0 30%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+  }
 
-    h1 {
-      text-align: center;
-      font-size: 1.4rem;
-      letter-spacing: 0.15em;
-      color: #7dd3fc;
-      margin-bottom: 32px;
-      text-transform: uppercase;
-    }
+  /* NAV PILLS */
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 20px 40px;
+  }
+  nav a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    transition: all .2s;
+  }
+  nav a:hover { color: var(--accent); border-color: rgba(0,229,255,0.4); background: var(--tag-bg); }
 
-    .experiment {
-      background: #161616;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      margin-bottom: 24px;
-      overflow: hidden;
-    }
+  /* MAIN */
+  main { max-width: 960px; margin: 0 auto; padding: 0 20px 80px; }
 
-    .exp-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 16px;
-      background: #1c1c1c;
-      border-bottom: 1px solid #2a2a2a;
-      gap: 12px;
-    }
+  /* SECTION */
+  .section {
+    margin-bottom: 64px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--tag-bg);
+    border: 1px solid rgba(0,229,255,0.25);
+    padding: 3px 10px;
+    border-radius: 2px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .section-title span {
+    color: var(--accent);
+  }
 
-    .exp-title {
-      font-size: 0.78rem;
-      font-weight: bold;
-      letter-spacing: 0.1em;
-      color: #7dd3fc;
-      text-transform: uppercase;
-    }
+  /* CODE CARD */
+  .code-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .code-card-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar-dots { display: flex; gap: 6px; }
+  .bar-dots span {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .bar-dots .d1 { background: #ff5f57; }
+  .bar-dots .d2 { background: #ffbd2e; }
+  .bar-dots .d3 { background: #28ca41; }
+  .bar-lang {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .2s;
+    user-select: none;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: rgba(0,229,255,0.4); background: var(--tag-bg); }
+  .copy-btn.copied { color: var(--accent3); border-color: rgba(0,230,118,0.4); background: rgba(0,230,118,0.06); }
+  .copy-btn svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-    .exp-num {
-      color: #475569;
-      font-size: 0.72rem;
-      margin-right: 8px;
-    }
+  pre {
+    padding: 22px 20px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.75;
+    color: #abb2bf;
+    background: var(--code-bg);
+  }
 
-    .copy-btn {
-      background: #1e3a4a;
-      color: #7dd3fc;
-      border: 1px solid #2d5a7a;
-      border-radius: 5px;
-      padding: 5px 12px;
-      font-size: 0.72rem;
-      font-family: inherit;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      transition: background 0.2s, color 0.2s;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+  /* Prolog syntax */
+  .kw { color: #c678dd; }
+  .pred { color: #61afef; }
+  .atom { color: #98c379; }
+  .var { color: #e06c75; }
+  .com { color: #5c6370; font-style: italic; }
+  .num { color: #d19a66; }
+  .op { color: #56b6c2; }
+  /* Python syntax */
+  .py-kw { color: #c678dd; }
+  .py-fn { color: #61afef; }
+  .py-str { color: #98c379; }
+  .py-num { color: #d19a66; }
+  .py-com { color: #5c6370; font-style: italic; }
+  .py-var { color: #e5c07b; }
+  .py-op { color: #56b6c2; }
+  .py-bi { color: #e06c75; }
 
-    .copy-btn:hover { background: #2d5a7a; color: #e0f2fe; }
-    .copy-btn.copied { background: #14532d; color: #86efac; border-color: #166534; }
+  /* QUERIES */
+  .queries-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin: 20px 0 10px;
+    padding-left: 4px;
+  }
+  .query-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .query-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    padding: 9px 14px;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: #abb2bf;
+  }
+  .query-item .q-num {
+    color: var(--accent2);
+    font-weight: 700;
+    min-width: 18px;
+  }
+  .query-item .q-ans {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 3px;
+  }
 
-    pre {
-      padding: 16px;
-      overflow-x: auto;
-      font-size: 0.8rem;
-      line-height: 1.6;
-      color: #c9d1d9;
-      background: #161616;
-      white-space: pre;
-    }
+  /* ACCORDION THEORY */
+  .theory-wrap { margin-top: 20px; }
+  .accordion {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .accordion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 18px;
+    background: var(--surface2);
+    cursor: pointer;
+    user-select: none;
+    transition: background .2s;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .accordion-header:hover { background: var(--border); }
+  .accordion-header .acc-icon {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--muted);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .25s, border-color .2s;
+    flex-shrink: 0;
+  }
+  .accordion-header .acc-icon svg {
+    width: 9px; height: 9px;
+    fill: none; stroke: var(--muted); stroke-width: 2.5;
+    stroke-linecap: round; stroke-linejoin: round;
+    transition: stroke .2s;
+  }
+  .accordion-header.open .acc-icon { transform: rotate(180deg); border-color: var(--accent); }
+  .accordion-header.open .acc-icon svg { stroke: var(--accent); }
+  .acc-label { display: flex; align-items: center; gap: 10px; }
+  .acc-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--tag-bg);
+    border: 1px solid rgba(0,229,255,0.2);
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .35s ease;
+    background: var(--surface);
+  }
+  .accordion-body.open { max-height: 600px; }
+  .theory-list {
+    list-style: none;
+    padding: 16px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .theory-list li {
+    display: flex;
+    gap: 12px;
+    font-size: 13.5px;
+    color: #c0c8d8;
+    line-height: 1.65;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .theory-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .t-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    background: var(--tag-bg);
+    border: 1px solid rgba(0,229,255,0.2);
+    padding: 1px 7px;
+    border-radius: 2px;
+    height: fit-content;
+    margin-top: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
 
-    .comment { color: #5a6472; }
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 56px 0;
+  }
 
-    .accordion { border-top: 1px solid #222; }
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
 
-    .accordion-toggle {
-      width: 100%;
-      background: #191919;
-      border: none;
-      color: #8899aa;
-      font-family: 'Courier New', monospace;
-      font-size: 0.73rem;
-      letter-spacing: 0.08em;
-      text-align: left;
-      padding: 10px 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    .accordion-toggle:hover { background: #1f1f1f; color: #aabbcc; }
-
-    .accordion-toggle .arrow {
-      display: inline-block;
-      transition: transform 0.25s;
-      font-size: 0.65rem;
-      color: #475569;
-    }
-
-    .accordion-toggle.open .arrow { transform: rotate(90deg); }
-
-    .accordion-body {
-      display: none;
-      padding: 14px 16px 16px;
-      background: #131313;
-      border-top: 1px solid #1e1e1e;
-      font-family: 'Courier New', monospace;
-      font-size: 0.76rem;
-      line-height: 1.7;
-      color: #8899aa;
-    }
-
-    .accordion-body.open { display: block; }
-    .accordion-body p { margin-bottom: 10px; }
-    .accordion-body p:last-child { margin-bottom: 0; }
-
-    .theory-label {
-      display: inline-block;
-      color: #4a7a8a;
-      font-size: 0.68rem;
-      letter-spacing: 0.1em;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    .device-tag {
-      display: inline-block;
-      background: #1a2a30;
-      color: #5a9ab0;
-      border: 1px solid #2a3a44;
-      border-radius: 3px;
-      font-size: 0.66rem;
-      padding: 2px 7px;
-      margin: 2px 3px 2px 0;
-      letter-spacing: 0.06em;
-    }
-
-    .devices { margin-bottom: 10px; }
-
-    @media (max-width: 480px) {
-      pre { font-size: 0.72rem; padding: 12px; }
-      .exp-title { font-size: 0.7rem; }
-    }
-  </style>
+  @media(max-width: 600px) {
+    pre { font-size: 11.5px; }
+    .section-title { font-size: 18px; }
+  }
+</style>
 </head>
 <body>
 
-<h1>Arduino Experiments</h1>
+<header>
+  <div class="exp-label">Experiment 02</div>
+  <h1>AI Lab Programs</h1>
+  <p>// Prolog · BFS · DFS · Hill Climbing · Genetic Algorithm</p>
+</header>
 
-<!-- ── EXP 1 ── -->
-<div class="experiment">
-  <div class="exp-header">
-    <div><span class="exp-num">EXP 1</span><span class="exp-title">Ultrasonic &amp; Buzzer</span></div>
-    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-  </div>
-  <pre><span class="comment">// Ultrasonic Sensor Pins</span>
-const int trigPin = 9;
-const int echoPin = 10;
-<span class="comment">// Buzzer Pin</span>
-const int buzzer = 8;
-long duration;
-int distance;
+<nav>
+  <a href="#family-tree">Family Tree</a>
+  <a href="#bfs">BFS</a>
+  <a href="#dfs">DFS</a>
+  <a href="#hill">Hill Climbing</a>
+  <a href="#genetic">Genetic Algorithm</a>
+</nav>
 
-void setup() {
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  pinMode(buzzer, OUTPUT);
-  Serial.begin(9600);
-}
+<main>
 
-void loop() {
-  <span class="comment">// Clear trigger pin</span>
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  <span class="comment">// Send ultrasonic pulse</span>
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-    
-  <span class="comment">// Read echo pulse</span>
-  duration = pulseIn(echoPin, HIGH);
-  <span class="comment">// Calculate distance</span>
-  distance = duration * 0.034 / 2;
-  <span class="comment">// Display distance</span>
-  Serial.print("Distance: ");
-  Serial.print(distance);
-  Serial.println(" cm");
-    
-  <span class="comment">// Buzzer condition</span>
-  if(distance &lt; 25) {
-    digitalWrite(buzzer, HIGH);
-  }
-  else {
-    digitalWrite(buzzer, LOW);
-  }
-  delay(200);
-}</pre>
-  <div class="accordion">
-    <button class="accordion-toggle" onclick="toggleAccordion(this)">
-      <span class="arrow">&#9658;</span> Theory &amp; Devices
-    </button>
-    <div class="accordion-body">
-      <div class="devices">
-        <span class="device-tag">HC-SR04</span>
-        <span class="device-tag">Passive Buzzer</span>
-        <span class="device-tag">Arduino Uno</span>
-      </div>
-      <span class="theory-label">Overview</span>
-      <p>The HC-SR04 ultrasonic sensor measures distance by emitting a 40 kHz sound pulse from its TRIG pin and timing how long the echo takes to return to the ECHO pin. Distance is calculated using the formula: distance = (duration × 0.034) / 2, where 0.034 cm/µs is the speed of sound and dividing by 2 accounts for the round trip.</p>
-      <p>The buzzer acts as an alert — when the measured distance falls below 25 cm, it activates to signal proximity. This is the fundamental principle behind parking sensors and obstacle-avoidance systems.</p>
-      <p>pulseIn() is a built-in Arduino function that measures the duration (in microseconds) of a HIGH pulse on a given pin. The TRIG pin must be pulsed HIGH for at least 10 µs to trigger a measurement cycle.</p>
+  <!-- ====== 1. FAMILY TREE ====== -->
+  <section class="section" id="family-tree">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Family Tree <span>— Prolog</span></h2>
     </div>
-  </div>
-</div>
 
-<!-- ── EXP 2 ── -->
-<div class="experiment">
-  <div class="exp-header">
-    <div><span class="exp-num">EXP 2</span><span class="exp-title">LCD Display</span></div>
-    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-  </div>
-  <pre>#include &lt;LiquidCrystal.h&gt;
-
-const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
-
-void setup() {
-  <span class="comment">// set up the LCD's number of columns and rows:</span>
-  lcd.begin(16, 2);
-  <span class="comment">// Print a message to the LCD.</span>
-  lcd.setCursor(0, 0);
-  lcd.print("HI");
-  lcd.setCursor(0, 1);
-  lcd.print("hello, world!");
-}
-
-void loop() {
-}</pre>
-  <div class="accordion">
-    <button class="accordion-toggle" onclick="toggleAccordion(this)">
-      <span class="arrow">&#9658;</span> Theory &amp; Devices
-    </button>
-    <div class="accordion-body">
-      <div class="devices">
-        <span class="device-tag">16x2 LCD</span>
-        <span class="device-tag">LiquidCrystal Lib</span>
-        <span class="device-tag">Arduino Uno</span>
+    <div class="code-card">
+      <div class="code-card-bar">
+        <div class="bar-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        <span class="bar-lang">Prolog</span>
+        <button class="copy-btn" onclick="copyBlock('ft-block','ft-theory','this-btn',this)">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy All
+        </button>
       </div>
-      <span class="theory-label">Overview</span>
-      <p>The 16x2 LCD (Liquid Crystal Display) can show 16 characters across 2 rows. It is driven using the Hitachi HD44780 controller, which the LiquidCrystal library abstracts into simple function calls.</p>
-      <p>It is wired in 4-bit mode here — only D4–D7 data pins are used instead of all 8, which saves GPIO pins without sacrificing functionality. RS (Register Select) chooses between command and data mode, and EN (Enable) latches each instruction into the display.</p>
-      <p>lcd.begin(16, 2) initialises the display size. lcd.setCursor(col, row) positions the text cursor before printing. Row and column indices start at 0, so setCursor(0,1) moves to the beginning of the second line.</p>
+      <pre id="ft-block"><span class="com">/* Facts */</span>
+<span class="pred">parent_of</span>(<span class="atom">helen</span>, <span class="atom">lily</span>).
+<span class="pred">parent_of</span>(<span class="atom">oliver</span>, <span class="atom">james</span>).
+<span class="pred">parent_of</span>(<span class="atom">sophie</span>, <span class="atom">james</span>).
+<span class="pred">parent_of</span>(<span class="atom">jess</span>, <span class="atom">simon</span>).
+<span class="pred">parent_of</span>(<span class="atom">ali</span>, <span class="atom">simon</span>).
+<span class="pred">parent_of</span>(<span class="atom">lily</span>, <span class="atom">harry</span>).
+<span class="pred">parent_of</span>(<span class="atom">james</span>, <span class="atom">harry</span>).
+
+<span class="com">/* Rules */</span>
+<span class="pred">father_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span> <span class="pred">male</span>(<span class="var">X</span>), <span class="pred">parent_of</span>(<span class="var">X</span>,<span class="var">Y</span>).
+<span class="pred">mother_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span> <span class="pred">female</span>(<span class="var">X</span>), <span class="pred">parent_of</span>(<span class="var">X</span>,<span class="var">Y</span>).
+
+<span class="pred">grandfather_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span> <span class="pred">male</span>(<span class="var">X</span>), <span class="pred">parent_of</span>(<span class="var">X</span>,<span class="var">Z</span>), <span class="pred">parent_of</span>(<span class="var">Z</span>,<span class="var">Y</span>).
+<span class="pred">grandmother_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span> <span class="pred">female</span>(<span class="var">X</span>), <span class="pred">parent_of</span>(<span class="var">X</span>,<span class="var">Z</span>), <span class="pred">parent_of</span>(<span class="var">Z</span>,<span class="var">Y</span>).
+
+<span class="pred">sister_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span>
+    <span class="pred">female</span>(<span class="var">X</span>),
+    <span class="pred">father_of</span>(<span class="var">F</span>,<span class="var">Y</span>), <span class="pred">father_of</span>(<span class="var">F</span>,<span class="var">X</span>), <span class="var">X</span> <span class="op">\=</span> <span class="var">Y</span>.
+<span class="pred">sister_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span> <span class="pred">female</span>(<span class="var">X</span>),
+    <span class="pred">mother_of</span>(<span class="var">M</span>,<span class="var">Y</span>), <span class="pred">mother_of</span>(<span class="var">M</span>,<span class="var">X</span>), <span class="var">X</span> <span class="op">\=</span> <span class="var">Y</span>.
+
+<span class="pred">aunt_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span> <span class="pred">female</span>(<span class="var">X</span>),
+    <span class="pred">parent_of</span>(<span class="var">Z</span>,<span class="var">Y</span>), <span class="pred">sister_of</span>(<span class="var">Z</span>,<span class="var">X</span>), <span class="op">!</span>.
+
+<span class="pred">brother_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span>
+    <span class="pred">male</span>(<span class="var">X</span>),
+    <span class="pred">father_of</span>(<span class="var">F</span>,<span class="var">Y</span>), <span class="pred">father_of</span>(<span class="var">F</span>,<span class="var">X</span>), <span class="var">X</span> <span class="op">\=</span> <span class="var">Y</span>.
+<span class="pred">brother_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span> <span class="pred">male</span>(<span class="var">X</span>),
+    <span class="pred">mother_of</span>(<span class="var">M</span>,<span class="var">Y</span>), <span class="pred">mother_of</span>(<span class="var">M</span>,<span class="var">X</span>), <span class="var">X</span> <span class="op">\=</span> <span class="var">Y</span>.
+
+<span class="pred">uncle_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span>
+    <span class="pred">parent_of</span>(<span class="var">Z</span>,<span class="var">Y</span>), <span class="pred">brother_of</span>(<span class="var">Z</span>,<span class="var">X</span>).
+
+<span class="pred">ancestor_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span> <span class="pred">parent_of</span>(<span class="var">X</span>,<span class="var">Y</span>).
+<span class="pred">ancestor_of</span>(<span class="var">X</span>,<span class="var">Y</span>) <span class="op">:-</span> <span class="pred">parent_of</span>(<span class="var">X</span>,<span class="var">Z</span>), <span class="pred">ancestor_of</span>(<span class="var">Z</span>,<span class="var">Y</span>).</pre>
     </div>
-  </div>
-</div>
 
-<!-- ── EXP 3 ── -->
-<div class="experiment">
-  <div class="exp-header">
-    <div><span class="exp-num">EXP 3</span><span class="exp-title">DC Motor</span></div>
-    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-  </div>
-  <pre><span class="comment">// L298N Motor Driver Pins</span>
-const int ENA = 9;
-const int IN1 = 8;
-const int IN2 = 7;
-
-void setup() {
-  pinMode(ENA, OUTPUT);
-  pinMode(IN1, OUTPUT);
-  pinMode(IN2, OUTPUT);
-}
-
-void loop() {
-  <span class="comment">// Motor Forward Direction</span>
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
-  <span class="comment">// Speed Control using PWM</span>
-  analogWrite(ENA, 200);
-  delay(3000);
-  <span class="comment">// Stop Motor</span>
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, LOW);
-  delay(1000);
-    
-  <span class="comment">// Motor Reverse Direction</span>
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, HIGH);
-  <span class="comment">// Speed Control using PWM</span>
-  analogWrite(ENA, 150);
-  delay(3000);
-  <span class="comment">// Stop Motor</span>
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, LOW);
-  delay(1000);
-}</pre>
-  <div class="accordion">
-    <button class="accordion-toggle" onclick="toggleAccordion(this)">
-      <span class="arrow">&#9658;</span> Theory &amp; Devices
-    </button>
-    <div class="accordion-body">
-      <div class="devices">
-        <span class="device-tag">L298N Driver</span>
-        <span class="device-tag">DC Motor</span>
-        <span class="device-tag">Arduino Uno</span>
+    <div style="margin-top:18px;">
+      <div class="queries-title">// Sample Queries</div>
+      <div class="query-list">
+        <div class="query-item"><span class="q-num">Q1</span><div><code>?- parent_of(lily, harry).</code><span class="q-ans">→ true. (Lily is a parent of Harry)</span></div></div>
+        <div class="query-item"><span class="q-num">Q2</span><div><code>?- grandfather_of(oliver, harry).</code><span class="q-ans">→ true. (Oliver → James → Harry)</span></div></div>
+        <div class="query-item"><span class="q-num">Q3</span><div><code>?- grandmother_of(X, harry).</code><span class="q-ans">→ X = helen ; X = sophie. (All grandmothers of Harry)</span></div></div>
+        <div class="query-item"><span class="q-num">Q4</span><div><code>?- ancestor_of(helen, harry).</code><span class="q-ans">→ true. (Helen is ancestor of Harry through Lily)</span></div></div>
+        <div class="query-item"><span class="q-num">Q5</span><div><code>?- uncle_of(X, harry).</code><span class="q-ans">→ X = simon. (James's brother Simon is uncle of Harry)</span></div></div>
       </div>
-      <span class="theory-label">Overview</span>
-      <p>A DC motor cannot be driven directly from an Arduino GPIO pin — the pin can only supply ~40 mA, far less than what a motor needs. The L298N is an H-bridge motor driver IC that can supply up to 2 A per channel, powered by an external supply.</p>
-      <p>The H-bridge works by controlling two pairs of switches. Setting IN1=HIGH and IN2=LOW drives current in one direction (forward); reversing them (IN1=LOW, IN2=HIGH) reverses current flow, spinning the motor backward. Setting both LOW coasts or brakes the motor.</p>
-      <p>ENA (Enable A) controls speed via PWM (Pulse Width Modulation). analogWrite() outputs a 0–255 value representing 0–100% duty cycle. A value of 200 is ~78% speed, and 150 is ~59% speed, allowing smooth variable-speed control without wasting power as heat.</p>
     </div>
-  </div>
-</div>
 
-<!-- ── EXP 4A ── -->
-<div class="experiment">
-  <div class="exp-header">
-    <div><span class="exp-num">EXP 4A</span><span class="exp-title">Temp &amp; Buzzer (DHT11.h)</span></div>
-    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-  </div>
-  <pre>#include &lt;DHT11.h&gt;
-
-DHT11 dht11(2);
-const int Buzzer = 8;
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(Buzzer, OUTPUT);
-}
-
-void loop() {
-  int temperature = dht11.readTemperature();
-  Serial.print("Temperature: ");
-  Serial.print(temperature);
-  Serial.println(" °C");
-  if(temperature &lt; 25) {
-    digitalWrite(Buzzer, HIGH);
-  }
-  else {
-    digitalWrite(Buzzer, LOW);
-  }
-}</pre>
-  <div class="accordion">
-    <button class="accordion-toggle" onclick="toggleAccordion(this)">
-      <span class="arrow">&#9658;</span> Theory &amp; Devices
-    </button>
-    <div class="accordion-body">
-      <div class="devices">
-        <span class="device-tag">DHT11</span>
-        <span class="device-tag">DHT11.h Library</span>
-        <span class="device-tag">Passive Buzzer</span>
-        <span class="device-tag">Arduino Uno</span>
+    <div class="theory-wrap">
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAcc(this)">
+          <span class="acc-label">
+            <span class="acc-tag">Theory</span>
+            Family Tree — Key Concepts
+          </span>
+          <span class="acc-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="accordion-body" id="ft-theory">
+          <ul class="theory-list">
+            <li><span class="t-num">01</span>Prolog is a logic programming language based on formal logic. A program consists of facts (ground truths) and rules (logical implications) that are queried using a built-in inference engine via backward chaining.</li>
+            <li><span class="t-num">02</span>Facts like <code>parent_of(helen, lily)</code> assert unconditional truths. Rules use the <code>:-</code> operator (read as "if") to define relationships derived from other facts or rules.</li>
+            <li><span class="t-num">03</span>Variables in Prolog are uppercase (e.g., <code>X, Y, Z</code>) and are unified (bound) during resolution. Atoms are lowercase constants like <code>helen, lily</code>.</li>
+            <li><span class="t-num">04</span>Recursive rules such as <code>ancestor_of</code> use Prolog's built-in depth-first search to traverse chains of relationships. The base case terminates recursion when <code>parent_of(X,Y)</code> holds directly.</li>
+            <li><span class="t-num">05</span>The cut operator <code>!</code> in <code>aunt_of</code> prunes the search tree — once a valid aunt is found, Prolog stops exploring alternative solutions, preventing duplicate results.</li>
+            <li><span class="t-num">06</span>The <code>\=</code> constraint ensures inequality, preventing a person from being their own sibling (e.g., <code>X \= Y</code> in <code>sister_of</code>).</li>
+            <li><span class="t-num">07</span>Prolog uses backtracking to find all solutions. Querying <code>grandmother_of(X, harry)</code> causes Prolog to unify and explore all possible bindings of X that satisfy the rule.</li>
+            <li><span class="t-num">08</span>Multiple clauses for the same predicate (e.g., two clauses for <code>sister_of</code>) represent disjunction — a sister through either the father's or mother's side satisfies the predicate.</li>
+          </ul>
+        </div>
       </div>
-      <span class="theory-label">Overview</span>
-      <p>The DHT11 is a low-cost digital temperature and humidity sensor. It uses a single-wire protocol to send calibrated data as a 40-bit serial stream. The DHT11.h library simplifies reading to a single call: readTemperature(), which returns an integer Celsius value.</p>
-      <p>The DHT11 measures temperatures from 0–50°C with ±2°C accuracy and humidity from 20–90% RH. It requires a pull-up resistor (typically 10 kΩ) on the data line, though many breakout modules include this on-board.</p>
-      <p>Here the buzzer activates when temperature drops below 25°C — an inverted threshold used as a cold-alert rather than an overheat alarm. This variant uses the simpler DHT11.h wrapper as compared to the full-featured DHT.h library used in Exp 4B.</p>
     </div>
-  </div>
-</div>
+  </section>
 
-<!-- ── EXP 4B ── -->
-<div class="experiment">
-  <div class="exp-header">
-    <div><span class="exp-num">EXP 4B</span><span class="exp-title">DHT11 &amp; Buzzer (DHT.h)</span></div>
-    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-  </div>
-  <pre>#include &lt;DHT.h&gt;
+  <div class="divider"></div>
 
-<span class="comment">// DHT11 setup</span>
-#define DHTPIN 2
-#define DHTTYPE DHT11
-DHT dht(DHTPIN, DHTTYPE);
-<span class="comment">// Buzzer pin</span>
-const int buzzer = 8;
-<span class="comment">// Temperature threshold</span>
-float threshold = 30.0;
+  <!-- ====== 2. BFS ====== -->
+  <section class="section" id="bfs">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Breadth-First Search <span>— Prolog</span></h2>
+    </div>
 
-void setup() {
-  Serial.begin(9600);
-  dht.begin();
-  pinMode(buzzer, OUTPUT);
-}
-
-void loop() {
-  <span class="comment">// Read temperature</span>
-  float temperature = dht.readTemperature();
-  <span class="comment">// Display temperature</span>
-  Serial.print("Temperature: ");
-  Serial.print(temperature);
-  Serial.println(" °C");
-    
-  <span class="comment">// Check threshold</span>
-  if (temperature > threshold) {
-    digitalWrite(buzzer, HIGH);
-  }
-  else {
-    digitalWrite(buzzer, LOW);
-  }
-  delay(2000);
-}</pre>
-  <div class="accordion">
-    <button class="accordion-toggle" onclick="toggleAccordion(this)">
-      <span class="arrow">&#9658;</span> Theory &amp; Devices
-    </button>
-    <div class="accordion-body">
-      <div class="devices">
-        <span class="device-tag">DHT11</span>
-        <span class="device-tag">DHT.h Library</span>
-        <span class="device-tag">Passive Buzzer</span>
-        <span class="device-tag">Arduino Uno</span>
+    <div class="code-card">
+      <div class="code-card-bar">
+        <div class="bar-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        <span class="bar-lang">Prolog</span>
+        <button class="copy-btn" onclick="copyBlock('bfs-block','bfs-theory','this-btn',this)">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy All
+        </button>
       </div>
-      <span class="theory-label">Overview</span>
-      <p>This variant uses the Adafruit DHT unified library (DHT.h), which supports DHT11, DHT22, and DHT21 through a common interface selected via the DHTTYPE macro. It is more widely used and maintained than the simpler DHT11.h wrapper.</p>
-      <p>readTemperature() returns a float rather than an integer, giving finer decimal resolution. The threshold is set at 30.0°C — the buzzer fires when exceeded, making this a classic overheat alert applicable to server rooms, battery packs, or greenhouse monitoring.</p>
-      <p>A 2-second delay between readings is important: the DHT11 has a minimum sampling period of 1 second. Polling faster can return stale or incorrect values due to the sensor's internal capacitor charge cycle not completing in time.</p>
+      <pre id="bfs-block"><span class="com">%connected(+Start, +Goal, -Weight)</span>
+<span class="pred">connected</span>(<span class="num">1</span>,<span class="num">7</span>,<span class="num">1</span>).   <span class="pred">connected</span>(<span class="num">1</span>,<span class="num">8</span>,<span class="num">1</span>).   <span class="pred">connected</span>(<span class="num">1</span>,<span class="num">3</span>,<span class="num">1</span>).
+<span class="pred">connected</span>(<span class="num">7</span>,<span class="num">4</span>,<span class="num">1</span>).   <span class="pred">connected</span>(<span class="num">7</span>,<span class="num">20</span>,<span class="num">1</span>).  <span class="pred">connected</span>(<span class="num">7</span>,<span class="num">17</span>,<span class="num">1</span>).
+<span class="pred">connected</span>(<span class="num">8</span>,<span class="num">6</span>,<span class="num">1</span>).   <span class="pred">connected</span>(<span class="num">3</span>,<span class="num">9</span>,<span class="num">1</span>).   <span class="pred">connected</span>(<span class="num">3</span>,<span class="num">12</span>,<span class="num">1</span>).
+<span class="pred">connected</span>(<span class="num">9</span>,<span class="num">19</span>,<span class="num">1</span>).  <span class="pred">connected</span>(<span class="num">4</span>,<span class="num">42</span>,<span class="num">1</span>).  <span class="pred">connected</span>(<span class="num">20</span>,<span class="num">28</span>,<span class="num">1</span>).
+<span class="pred">connected</span>(<span class="num">17</span>,<span class="num">10</span>,<span class="num">1</span>).
+
+<span class="pred">connected2</span>(<span class="var">X</span>,<span class="var">Y</span>,<span class="var">D</span>) <span class="op">:-</span> <span class="pred">connected</span>(<span class="var">X</span>,<span class="var">Y</span>,<span class="var">D</span>).
+<span class="pred">connected2</span>(<span class="var">X</span>,<span class="var">Y</span>,<span class="var">D</span>) <span class="op">:-</span> <span class="pred">connected</span>(<span class="var">Y</span>,<span class="var">X</span>,<span class="var">D</span>).
+
+<span class="pred">next_node</span>(<span class="var">Current</span>, <span class="var">Next</span>, <span class="var">Path</span>) <span class="op">:-</span>
+    <span class="pred">connected2</span>(<span class="var">Current</span>, <span class="var">Next</span>, <span class="var">_</span>),
+    <span class="kw">not</span>(<span class="pred">member</span>(<span class="var">Next</span>, <span class="var">Path</span>)).
+
+<span class="pred">breadth_first</span>(<span class="var">Goal</span>, <span class="var">Goal</span>, <span class="var">_</span>, [<span class="var">Goal</span>]).
+<span class="pred">breadth_first</span>(<span class="var">Start</span>, <span class="var">Goal</span>, <span class="var">Visited</span>, <span class="var">Path</span>) <span class="op">:-</span>
+    <span class="pred">findall</span>(<span class="var">X</span>,
+        (<span class="pred">connected2</span>(<span class="var">X</span>,<span class="var">Start</span>,<span class="var">_</span>), <span class="kw">not</span>(<span class="pred">member</span>(<span class="var">X</span>,<span class="var">Visited</span>))),
+        [<span class="var">T</span>|<span class="var">Extend</span>]),
+    <span class="pred">write</span>(<span class="var">Visited</span>), <span class="pred">nl</span>,
+    <span class="pred">append</span>(<span class="var">Visited</span>, [<span class="var">T</span>|<span class="var">Extend</span>], <span class="var">Visited2</span>),
+    <span class="pred">append</span>(<span class="var">Path</span>, [<span class="var">T</span>|<span class="var">Extend</span>], [<span class="var">Next</span>|<span class="var">Path2</span>]),
+    <span class="pred">breadth_first</span>(<span class="var">Next</span>, <span class="var">Goal</span>, <span class="var">Visited2</span>, <span class="var">Path2</span>).</pre>
     </div>
-  </div>
-</div>
 
-<!-- ── EXP 5 ── -->
-<div class="experiment">
-  <div class="exp-header">
-    <div><span class="exp-num">EXP 5</span><span class="exp-title">LPC2148 – Stepper Motor</span></div>
-    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-  </div>
-  <pre>#include &lt;lpc21XX.h&gt;
-
-void delay()
-{
-  int i,j;
-  for(i=0;i&lt;1000;i++)
-  {
-    for(j=0;j&lt;1000;j++);
-  }
-}
-
-void main(void)
-{
-  IODIR0 = 0X0000FFFF;
-  while(1)
-  {
-    IOSET0 = 0X00000914;
-    delay();
-    IOCLR0 = 0X0000FFFF;
-    IOSET0 = 0X00000A21;
-    delay();
-    IOCLR0 = 0X0000FFFF;
-    IOSET0 = 0X00001409;
-    delay();
-    IOCLR0 = 0X0000FFFF;
-    IOSET0 = 0X0000210A;
-    delay();
-    IOCLR0 = 0X0000FFFF;
-  }
-}</pre>
-  <div class="accordion">
-    <button class="accordion-toggle" onclick="toggleAccordion(this)">
-      <span class="arrow">&#9658;</span> Theory &amp; Devices
-    </button>
-    <div class="accordion-body">
-      <div class="devices">
-        <span class="device-tag">LPC2148</span>
-        <span class="device-tag">Stepper Motor</span>
-        <span class="device-tag">ARM7TDMI-S</span>
-        <span class="device-tag">lpc21XX.h</span>
+    <div style="margin-top:18px;">
+      <div class="queries-title">// Sample Queries</div>
+      <div class="query-list">
+        <div class="query-item"><span class="q-num">Q1</span><div><code>?- breadth_first(1, 28, [1], Path).</code><span class="q-ans">→ Finds path from node 1 to node 28 via BFS</span></div></div>
+        <div class="query-item"><span class="q-num">Q2</span><div><code>?- connected2(7, X, _).</code><span class="q-ans">→ X = 1 ; X = 4 ; X = 20 ; X = 17. (All neighbours of 7)</span></div></div>
+        <div class="query-item"><span class="q-num">Q3</span><div><code>?- breadth_first(1, 42, [1], Path).</code><span class="q-ans">→ Path goes 1 → 7 → 4 → 42</span></div></div>
+        <div class="query-item"><span class="q-num">Q4</span><div><code>?- next_node(3, X, [1,3]).</code><span class="q-ans">→ X = 9 ; X = 12. (Unvisited neighbours of 3)</span></div></div>
+        <div class="query-item"><span class="q-num">Q5</span><div><code>?- breadth_first(1, 19, [1], Path).</code><span class="q-ans">→ Path: 1 → 3 → 9 → 19</span></div></div>
       </div>
-      <span class="theory-label">Overview</span>
-      <p>The LPC2148 is a 32-bit ARM7TDMI-S based microcontroller by NXP. Unlike Arduino, it is programmed in bare-metal C using memory-mapped I/O registers. IODIR0 configures the direction of Port 0 pins — writing 0x0000FFFF sets the lower 16 pins as outputs.</p>
-      <p>IOSET0 and IOCLR0 are write-only registers that set or clear specific Port 0 pins without affecting others. Each hex value written to IOSET0 represents a specific bit pattern that energises a combination of stepper motor coils for one step in the sequence.</p>
-      <p>A stepper motor moves in discrete angular steps by energising coils in a defined sequence. The four hex values (0x0914, 0x0A21, 0x1409, 0x210A) represent a full-step drive pattern — each activating two coils at a time. Cycling through these four patterns in order rotates the motor continuously. The nested-loop software delay controls step speed without any hardware timer.</p>
     </div>
-  </div>
-</div>
 
-<!-- ── EXP 6 ── -->
-<div class="experiment">
-  <div class="exp-header">
-    <div><span class="exp-num">EXP 6</span><span class="exp-title">Rate Monotonic Scheduling</span></div>
-    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-  </div>
-  <pre>#include &lt;iostream&gt;
-#include &lt;math.h&gt;
-using namespace std;
-
-int main() {
-  int a, temp, i, j;
-  float ut = 0;
-  float u[10], t[10], c[10], p[10];
-  cout &lt;&lt; "Enter the number of tasks: ";
-  cin &gt;&gt; a;
-    
-  for (i = 0; i &lt; a; i++) {
-    cout &lt;&lt; "Enter period of task " &lt;&lt; i + 1 &lt;&lt; ": ";
-    cin &gt;&gt; t[i];
-    p[i] = t[i];
-    cout &lt;&lt; "Enter CPU time of task " &lt;&lt; i + 1 &lt;&lt; ": ";
-    cin &gt;&gt; c[i];
-  }
-    
-  for (i = 0; i &lt; a - 1; i++) {
-    for (j = 0; j &lt; a - i - 1; j++) {
-      if (p[j] > p[j + 1]) {
-        temp = p[j];
-        p[j] = p[j + 1];
-        p[j + 1] = temp;
-      }
-    }
-  }
-    
-  cout &lt;&lt; "\nTask Priorities:\n";
-  for (i = 0; i &lt; a; i++) {
-    for (j = 0; j &lt; a; j++) {
-      if (t[i] == p[j]) {
-        cout &lt;&lt; "Priority of Task " &lt;&lt; i + 1 &lt;&lt; " is: " &lt;&lt; j + 1 &lt;&lt; endl;
-      }
-    }
-  }
-    
-  for (i = 0; i &lt; a; i++) {
-    u[i] = c[i] / t[i];
-    ut += u[i];
-  }
-  cout &lt;&lt; "\nTotal Utilization is: " &lt;&lt; ut &lt;&lt; endl;
-  if (ut &lt; 1) {
-    cout &lt;&lt; "Tasks are Schedulable" &lt;&lt; endl;
-  } else {
-    cout &lt;&lt; "Tasks are NOT Schedulable" &lt;&lt; endl;
-  }
-  return 0;
-}</pre>
-  <div class="accordion">
-    <button class="accordion-toggle" onclick="toggleAccordion(this)">
-      <span class="arrow">&#9658;</span> Theory &amp; Devices
-    </button>
-    <div class="accordion-body">
-      <div class="devices">
-        <span class="device-tag">Rate Monotonic</span>
-        <span class="device-tag">RTOS Scheduling</span>
-        <span class="device-tag">C++ / Simulation</span>
+    <div class="theory-wrap">
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAcc(this)">
+          <span class="acc-label"><span class="acc-tag">Theory</span> BFS — Key Concepts</span>
+          <span class="acc-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="accordion-body" id="bfs-theory">
+          <ul class="theory-list">
+            <li><span class="t-num">01</span>Breadth-First Search (BFS) explores a graph level by level — all nodes at depth 1 are visited before any node at depth 2. This guarantees finding the shortest path in an unweighted graph.</li>
+            <li><span class="t-num">02</span><code>connected2</code> makes the graph bidirectional by allowing traversal in both directions, even though the original <code>connected</code> facts are one-directional.</li>
+            <li><span class="t-num">03</span><code>findall/3</code> collects all unvisited neighbours of the current node into a list, simulating the BFS queue expansion step.</li>
+            <li><span class="t-num">04</span>The <code>Visited</code> list prevents revisiting already-explored nodes, avoiding infinite loops in cyclic graphs and ensuring each node is processed at most once.</li>
+            <li><span class="t-num">05</span>The base case <code>breadth_first(Goal, Goal, _, [Goal])</code> terminates recursion when the current frontier node matches the goal, returning it as a single-element path.</li>
+            <li><span class="t-num">06</span>BFS uses more memory than DFS (O(b^d) space where b=branching factor, d=depth) because it maintains the entire frontier queue, but guarantees optimality for uniform-cost edges.</li>
+            <li><span class="t-num">07</span><code>append/3</code> is used to manage both the visited list and the path — merging the current visited set with new neighbours and updating the traversal queue simultaneously.</li>
+          </ul>
+        </div>
       </div>
-      <span class="theory-label">Overview</span>
-      <p>Rate Monotonic Scheduling (RMS) is a fixed-priority preemptive scheduling algorithm used in real-time systems. The core rule is simple: tasks with shorter periods are assigned higher priorities. This is optimal among all fixed-priority algorithms — if any fixed-priority assignment can meet all deadlines, RMS will too.</p>
-      <p>This program implements RMS analysis by taking each task's period (T) and CPU execution time (C), then computing CPU utilization as U = C/T per task. Total utilization is the sum of all individual utilizations. The schedulability condition checked here is U &lt; 1 (necessary condition). The tighter Liu &amp; Layland bound is U ≤ n(2^(1/n) − 1), which approaches ln(2) ≈ 69.3% as n grows.</p>
-      <p>Priority assignment is done by sorting periods in ascending order using bubble sort — the task with the smallest period gets priority rank 1 (highest). The program then maps each original task back to its sorted position to display its RMS priority. This simulation is useful for verifying task sets before deploying them on an embedded RTOS like FreeRTOS.</p>
     </div>
-  </div>
-</div>
+  </section>
 
-<!-- ── EXP 7 ── -->
-<div class="experiment">
-  <div class="exp-header">
-    <div><span class="exp-num">EXP 7</span><span class="exp-title">RTOS – FreeRTOS LED Tasks</span></div>
-    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-  </div>
-  <pre>#include &lt;Arduino_FreeRTOS.h&gt;
+  <div class="divider"></div>
 
-<span class="comment">// LED Pins</span>
-const int redLED = 8;
-const int greenLED = 9;
-<span class="comment">// Task Functions</span>
-void RedLEDTask(void *pvParameters);
-void GreenLEDTask(void *pvParameters);
+  <!-- ====== 3. DFS ====== -->
+  <section class="section" id="dfs">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Depth-First Search <span>— Prolog</span></h2>
+    </div>
 
-void setup() {
-  pinMode(redLED, OUTPUT);
-  pinMode(greenLED, OUTPUT);
-  <span class="comment">// Create Tasks</span>
-  xTaskCreate(
-    RedLEDTask,
-    "Red LED Task",
-    128,
-    NULL,
-    1,
-    NULL
-  );
-  xTaskCreate(
-    GreenLEDTask,
-    "Green LED Task",
-    128,
-    NULL,
-    1,
-    NULL
-  );
-}
-
-void loop() {
-  <span class="comment">// Empty because FreeRTOS scheduler handles tasks</span>
-}
-
-<span class="comment">// Task for Red LED</span>
-void RedLEDTask(void *pvParameters) {
-  while (1) {
-    digitalWrite(redLED, HIGH);
-    vTaskDelay(500 / portTICK_PERIOD_MS);
-    digitalWrite(redLED, LOW);
-    vTaskDelay(500 / portTICK_PERIOD_MS);
-  }
-}
-
-<span class="comment">// Task for Green LED</span>
-void GreenLEDTask(void *pvParameters) {
-  while (1) {
-    digitalWrite(greenLED, HIGH);
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-    digitalWrite(greenLED, LOW);
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-  }
-}</pre>
-  <div class="accordion">
-    <button class="accordion-toggle" onclick="toggleAccordion(this)">
-      <span class="arrow">&#9658;</span> Theory &amp; Devices
-    </button>
-    <div class="accordion-body">
-      <div class="devices">
-        <span class="device-tag">FreeRTOS</span>
-        <span class="device-tag">Red LED</span>
-        <span class="device-tag">Green LED</span>
-        <span class="device-tag">Arduino Uno</span>
+    <div class="code-card">
+      <div class="code-card-bar">
+        <div class="bar-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        <span class="bar-lang">Prolog</span>
+        <button class="copy-btn" onclick="copyBlock('dfs-block','dfs-theory','this-btn',this)">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy All
+        </button>
       </div>
-      <span class="theory-label">Overview</span>
-      <p>FreeRTOS (Free Real-Time Operating System) is a lightweight kernel that enables multitasking on microcontrollers. Unlike standard Arduino sketches where loop() executes sequentially, FreeRTOS allows multiple tasks to run concurrently by rapidly switching between them — a process called context switching.</p>
-      <p>xTaskCreate() registers a task with the scheduler. Parameters include the function pointer, a name string, stack size in words (128 here), optional parameters, priority level, and a handle. Both tasks have equal priority (1), so the scheduler round-robins between them using time slices.</p>
-      <p>vTaskDelay() is used instead of delay() — it yields CPU control back to the scheduler during the wait period, allowing other tasks to run. portTICK_PERIOD_MS converts milliseconds to RTOS ticks. The red LED blinks every 500 ms and the green every 1000 ms, both running independently without blocking each other.</p>
+      <pre id="dfs-block"><span class="pred">solve</span>(<span class="var">Node</span>, <span class="var">Solution</span>) <span class="op">:-</span>
+    <span class="pred">depthfirst</span>([], <span class="var">Node</span>, <span class="var">Solution</span>).
+
+<span class="pred">depthfirst</span>(<span class="var">Path</span>, <span class="var">Node</span>, [<span class="var">Node</span> | <span class="var">Path</span>]) <span class="op">:-</span>
+    <span class="pred">goal</span>(<span class="var">Node</span>).
+<span class="pred">depthfirst</span>(<span class="var">Path</span>, <span class="var">Node</span>, <span class="var">Sol</span>) <span class="op">:-</span>
+    <span class="pred">s</span>(<span class="var">Node</span>, <span class="var">Node1</span>),
+    <span class="op">\+</span> <span class="pred">member</span>(<span class="var">Node1</span>, <span class="var">Path</span>),
+    <span class="pred">depthfirst</span>([<span class="var">Node</span> | <span class="var">Path</span>], <span class="var">Node1</span>, <span class="var">Sol</span>).
+
+<span class="pred">depthfirst2</span>(<span class="var">Node</span>, [<span class="var">Node</span>], <span class="var">_</span>) <span class="op">:-</span>
+    <span class="pred">goal</span>(<span class="var">Node</span>).
+<span class="pred">depthfirst2</span>(<span class="var">Node</span>, [<span class="var">Node</span> | <span class="var">Sol</span>], <span class="var">Maxdepth</span>) <span class="op">:-</span>
+    <span class="var">Maxdepth</span> <span class="op">></span> <span class="num">0</span>,
+    <span class="pred">s</span>(<span class="var">Node</span>, <span class="var">Node1</span>),
+    <span class="var">Max1</span> <span class="kw">is</span> <span class="var">Maxdepth</span> - <span class="num">1</span>,
+    <span class="pred">depthfirst2</span>(<span class="var">Node1</span>, <span class="var">Sol</span>, <span class="var">Max1</span>).
+
+<span class="com">/* Goals and State-Space */</span>
+<span class="pred">goal</span>(<span class="atom">f</span>).    <span class="pred">goal</span>(<span class="atom">j</span>).
+<span class="pred">s</span>(<span class="atom">a</span>,<span class="atom">b</span>).    <span class="pred">s</span>(<span class="atom">a</span>,<span class="atom">c</span>).
+<span class="pred">s</span>(<span class="atom">b</span>,<span class="atom">d</span>).    <span class="pred">s</span>(<span class="atom">b</span>,<span class="atom">e</span>).
+<span class="pred">s</span>(<span class="atom">c</span>,<span class="atom">f</span>).    <span class="pred">s</span>(<span class="atom">c</span>,<span class="atom">g</span>).
+<span class="pred">s</span>(<span class="atom">d</span>,<span class="atom">h</span>).    <span class="pred">s</span>(<span class="atom">e</span>,<span class="atom">i</span>).    <span class="pred">s</span>(<span class="atom">e</span>,<span class="atom">j</span>).</pre>
     </div>
-  </div>
-</div>
+
+    <div style="margin-top:18px;">
+      <div class="queries-title">// Sample Queries</div>
+      <div class="query-list">
+        <div class="query-item"><span class="q-num">Q1</span><div><code>?- solve(a, Solution).</code><span class="q-ans">→ Solution = [f, c, a] (first path DFS finds to a goal)</span></div></div>
+        <div class="query-item"><span class="q-num">Q2</span><div><code>?- depthfirst2(a, Path, 3).</code><span class="q-ans">→ Path = [a, b, d, h] or [a, c, f] (depth-limited)</span></div></div>
+        <div class="query-item"><span class="q-num">Q3</span><div><code>?- goal(X).</code><span class="q-ans">→ X = f ; X = j. (All goal states)</span></div></div>
+        <div class="query-item"><span class="q-num">Q4</span><div><code>?- depthfirst([], a, Sol).</code><span class="q-ans">→ Sol = [f, c, a] (same as solve/2)</span></div></div>
+        <div class="query-item"><span class="q-num">Q5</span><div><code>?- depthfirst2(a, Path, 4).</code><span class="q-ans">→ Path = [a, b, e, j] (finds second goal j within depth 4)</span></div></div>
+      </div>
+    </div>
+
+    <div class="theory-wrap">
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAcc(this)">
+          <span class="acc-label"><span class="acc-tag">Theory</span> DFS — Key Concepts</span>
+          <span class="acc-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="accordion-body" id="dfs-theory">
+          <ul class="theory-list">
+            <li><span class="t-num">01</span>Depth-First Search (DFS) explores as deep as possible along each branch before backtracking. In Prolog, this maps naturally to the language's own recursive + backtracking execution model.</li>
+            <li><span class="t-num">02</span>The <code>Path</code> accumulator carries visited nodes to prevent cycles. The check <code>\+ member(Node1, Path)</code> ensures we never re-enter a previously explored state.</li>
+            <li><span class="t-num">03</span>The <code>solve/2</code> wrapper initialises the visited path as empty (<code>[]</code>) and delegates to <code>depthfirst/3</code>, separating interface from implementation.</li>
+            <li><span class="t-num">04</span>DFS has O(b·m) space complexity (b = branching factor, m = max depth) — far more memory-efficient than BFS for deep trees, though it may not find the shortest path.</li>
+            <li><span class="t-num">05</span>Depth-Limited DFS (<code>depthfirst2</code>) adds a <code>Maxdepth</code> parameter that decrements with each recursive call, stopping exploration once the limit is reached — useful for iterative deepening.</li>
+            <li><span class="t-num">06</span>The state-space graph is defined by <code>s/2</code> (successor relation), making the search algorithm cleanly independent of the problem — different problems only require different <code>s/2</code> and <code>goal/1</code> definitions.</li>
+            <li><span class="t-num">07</span>DFS can get trapped exploring infinite paths in graphs without a depth limit or visited-node check. Both protective mechanisms are demonstrated here — cyclic check in <code>depthfirst</code> and depth cap in <code>depthfirst2</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ====== 4. HILL CLIMBING ====== -->
+  <section class="section" id="hill">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Hill Climbing <span>— Python</span></h2>
+    </div>
+
+    <div class="code-card">
+      <div class="code-card-bar">
+        <div class="bar-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        <span class="bar-lang">Python</span>
+        <button class="copy-btn" onclick="copyBlock('hc-block','hc-theory','this-btn',this)">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy All
+        </button>
+      </div>
+      <pre id="hc-block"><span class="py-kw">def</span> <span class="py-fn">f</span>(x):
+    <span class="py-kw">return</span> -x*x + <span class="py-num">5</span>
+
+x = <span class="py-num">2.0</span>
+step = <span class="py-num">0.1</span>
+iterations = <span class="py-num">0</span>
+
+<span class="py-kw">for</span> i <span class="py-kw">in</span> <span class="py-fn">range</span>(<span class="py-num">100</span>):
+    left  = x - step
+    right = x + step
+    <span class="py-kw">if</span> <span class="py-fn">f</span>(left) > <span class="py-fn">f</span>(x):
+        x = left
+        iterations += <span class="py-num">1</span>
+    <span class="py-kw">elif</span> <span class="py-fn">f</span>(right) > <span class="py-fn">f</span>(x):
+        x = right
+        iterations += <span class="py-num">1</span>
+    <span class="py-kw">else</span>:
+        <span class="py-fn">print</span>(<span class="py-str">f"Algorithm converged after {iterations} iterations."</span>)
+        <span class="py-kw">break</span>
+
+<span class="py-kw">if</span> <span class="py-fn">abs</span>(x) < <span class="py-num">1e-10</span>:
+    x = <span class="py-num">0.0</span>
+
+<span class="py-fn">print</span>(<span class="py-str">"Best solution ="</span>, x)
+<span class="py-fn">print</span>(<span class="py-str">"Maximum value ="</span>, <span class="py-fn">round</span>(<span class="py-fn">f</span>(x), <span class="py-num">4</span>))</pre>
+    </div>
+
+    <div class="theory-wrap">
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAcc(this)">
+          <span class="acc-label"><span class="acc-tag">Theory</span> Hill Climbing — Key Concepts</span>
+          <span class="acc-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="accordion-body" id="hc-theory">
+          <ul class="theory-list">
+            <li><span class="t-num">01</span>Hill Climbing is a local search algorithm that continuously moves to the neighbouring state with the highest value (greedy best neighbour). It is an iterative improvement technique with no memory of previously visited states.</li>
+            <li><span class="t-num">02</span>The objective function here is <code>f(x) = -x² + 5</code>, a downward parabola with a global maximum at x = 0 where f(0) = 5. The negative quadratic ensures a single peak — an ideal test case.</li>
+            <li><span class="t-num">03</span>At each iteration, two neighbours are evaluated: <code>x - step</code> (left) and <code>x + step</code> (right). The algorithm moves to whichever neighbour improves the objective; if neither does, it terminates.</li>
+            <li><span class="t-num">04</span>The step size (0.1) controls the resolution of the search. Larger steps speed up convergence but may skip over the exact peak; smaller steps are more precise but slower.</li>
+            <li><span class="t-num">05</span>Hill Climbing can get stuck at local maxima, plateaus, or ridges — points where no immediate neighbour improves the objective but the global optimum hasn't been reached. This is its primary limitation.</li>
+            <li><span class="t-num">06</span>Convergence is detected when neither left nor right neighbour yields improvement, meaning the algorithm has reached a local (and in this case, global) optimum. The loop then breaks early.</li>
+            <li><span class="t-num">07</span>The near-zero check (<code>abs(x) < 1e-10</code>) handles floating-point precision — since the true optimum is x = 0, values extremely close to zero are snapped to exactly 0.0 for clean output.</li>
+            <li><span class="t-num">08</span>Variants like Stochastic Hill Climbing, Random Restarts, and Simulated Annealing address the local-maxima problem by introducing randomness or occasional downhill moves to escape suboptimal regions.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ====== 5. GENETIC ALGORITHM ====== -->
+  <section class="section" id="genetic">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Genetic Algorithm <span>— Python</span></h2>
+    </div>
+
+    <div class="code-card">
+      <div class="code-card-bar">
+        <div class="bar-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        <span class="bar-lang">Python</span>
+        <button class="copy-btn" onclick="copyBlock('ga-block','ga-theory','this-btn',this)">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy All
+        </button>
+      </div>
+      <pre id="ga-block"><span class="py-kw">import</span> random
+
+TARGET = <span class="py-num">20</span>
+
+<span class="py-com"># Fitness Function</span>
+<span class="py-kw">def</span> <span class="py-fn">fitness</span>(x):
+    <span class="py-kw">return</span> -<span class="py-fn">abs</span>(TARGET - x)
+
+<span class="py-com"># Initial Population</span>
+population = [random.<span class="py-fn">randint</span>(<span class="py-num">0</span>, <span class="py-num">30</span>) <span class="py-kw">for</span> _ <span class="py-kw">in</span> <span class="py-fn">range</span>(<span class="py-num">6</span>)]
+
+<span class="py-kw">for</span> generation <span class="py-kw">in</span> <span class="py-fn">range</span>(<span class="py-num">10</span>):
+    <span class="py-com"># Selection (best 2 individuals)</span>
+    population.<span class="py-fn">sort</span>(key=fitness, reverse=<span class="py-bi">True</span>)
+    parent1 = population[<span class="py-num">0</span>]
+    parent2 = population[<span class="py-num">1</span>]
+
+    <span class="py-com"># Crossover</span>
+    child = (parent1 + parent2) <span class="py-op">//</span> <span class="py-num">2</span>
+
+    <span class="py-com"># Mutation</span>
+    <span class="py-kw">if</span> random.<span class="py-fn">random</span>() < <span class="py-num">0.3</span>:
+        child += random.<span class="py-fn">choice</span>([-<span class="py-num">1</span>, <span class="py-num">1</span>])
+
+    <span class="py-com"># Replace worst individual</span>
+    population[-<span class="py-num">1</span>] = child
+    <span class="py-fn">print</span>(<span class="py-str">"Generation"</span>, generation + <span class="py-num">1</span>, <span class="py-str">"Best ="</span>, parent1)
+
+<span class="py-fn">print</span>(<span class="py-str">"\nBest Solution ="</span>, population[<span class="py-num">0</span>])</pre>
+    </div>
+
+    <div class="theory-wrap">
+      <div class="accordion">
+        <div class="accordion-header" onclick="toggleAcc(this)">
+          <span class="acc-label"><span class="acc-tag">Theory</span> Genetic Algorithm — Key Concepts</span>
+          <span class="acc-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="accordion-body" id="ga-theory">
+          <ul class="theory-list">
+            <li><span class="t-num">01</span>Genetic Algorithms (GAs) are population-based metaheuristic optimisation algorithms inspired by Darwinian evolution — survival of the fittest, crossover, and mutation drive the population toward better solutions over generations.</li>
+            <li><span class="t-num">02</span>The fitness function <code>-abs(TARGET - x)</code> assigns higher fitness to individuals closer to the target value (20). A fitness of 0 means a perfect solution; increasingly negative values indicate increasing distance from the target.</li>
+            <li><span class="t-num">03</span>Selection identifies the two fittest individuals (parents) from the current population by sorting using the fitness key. This is a simple truncation selection strategy — only the top 2 reproduce.</li>
+            <li><span class="t-num">04</span>Crossover (recombination) creates a child by averaging the two parent values: <code>(parent1 + parent2) // 2</code>. This mimics biological crossover where offspring inherit traits from both parents.</li>
+            <li><span class="t-num">05</span>Mutation introduces randomness by randomly adding or subtracting 1 from the child with 30% probability. This prevents the population from converging prematurely and maintains genetic diversity.</li>
+            <li><span class="t-num">06</span>Elitism is implicit — the worst individual is replaced by the new child while the best individuals are preserved across generations, ensuring the population quality never decreases.</li>
+            <li><span class="t-num">07</span>GAs are particularly powerful for large, complex search spaces where gradient information is unavailable. Unlike hill climbing, they maintain a diverse population, reducing the risk of getting trapped at local optima.</li>
+            <li><span class="t-num">08</span>The key parameters — population size (6), mutation rate (0.3), and number of generations (10) — control the exploration-exploitation trade-off. Larger populations and more generations improve solution quality at the cost of computation time.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span style="color:var(--accent)">// EXP 02</span> &nbsp;·&nbsp; AI Lab &nbsp;·&nbsp; Prolog · Python
+</footer>
 
 <script>
-  function toggleAccordion(btn) {
-    btn.classList.toggle('open');
-    btn.nextElementSibling.classList.toggle('open');
+  function toggleAcc(header) {
+    const body = header.nextElementSibling;
+    const isOpen = header.classList.contains('open');
+    header.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
   }
 
-  function copyCode(btn) {
-    const exp = btn.closest('.experiment');
-    const pre = exp.querySelector('pre');
-    const theoryEl = exp.querySelector('.accordion-body');
+  function getPlainText(id) {
+    const el = document.getElementById(id);
+    return el ? el.innerText || el.textContent : '';
+  }
 
-    const codeRaw = pre.innerHTML
-      .replace(/<span[^>]*>/g, '')
-      .replace(/<\/span>/g, '')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&amp;/g, '&');
+  function getTheoryText(theoryId) {
+    const el = document.getElementById(theoryId);
+    if (!el) return '';
+    const items = el.querySelectorAll('.theory-list li');
+    let out = '\n\n--- THEORY ---\n';
+    items.forEach((li, i) => {
+      const text = li.innerText || li.textContent;
+      out += `\n${i + 1}. ${text.replace(/^\d+\s*/, '').trim()}`;
+    });
+    return out;
+  }
 
-    const theoryText = theoryEl ? theoryEl.innerText.trim() : '';
-    const divider = '\u2500'.repeat(40);
-    const combined = codeRaw.trim() + '\n\n' + divider + '\nTHEORY\n' + divider + '\n' + theoryText;
-
-    navigator.clipboard.writeText(combined).then(() => {
-      btn.textContent = 'Copied!';
+  function copyBlock(codeId, theoryId, _, btn) {
+    const code = getPlainText(codeId);
+    const theory = getTheoryText(theoryId);
+    const full = code + theory;
+    navigator.clipboard.writeText(full).then(() => {
       btn.classList.add('copied');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
       setTimeout(() => {
-        btn.textContent = 'Copy';
         btn.classList.remove('copied');
-      }, 1800);
+        btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy All`;
+      }, 2000);
     });
   }
 </script>
-
 </body>
 </html>
